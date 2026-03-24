@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Submara — Porteføljedirektør Decision Support</title>
+<style>
+/* ═══════════════════════════════════════════════════════════
+   THEME & VARIABLES
+   ═══════════════════════════════════════════════════════════ */
+:root {
+  --bg: #0a0f1a;
+  --bg2: #0f1520;
+  --surface: #151c2c;
+  --surface2: #1a2236;
+  --surface3: #1f2942;
+  --border: #243050;
+  --border-light: #2d3a55;
+  --text: #e2e8f0;
+  --text-muted: #7a8ba8;
+  --text-dim: #4a5a75;
+  --accent: #0ea5e9;
+  --accent2: #06b6d4;
+  --accent-dim: rgba(14,165,233,.12);
+  --green: #10b981;
+  --green-dim: rgba(16,185,129,.12);
+  --amber: #f59e0b;
+  --amber-dim: rgba(245,158,11,.12);
+  --red: #ef4444;
+  --red-dim: rgba(239,68,68,.12);
+  --purple: #8b5cf6;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 2px 8px rgba(0,0,0,.3);
+  --transition: .2s ease;
+  --font: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: var(--font); background: var(--bg); color: var(--text); line-height:1.5; overflow-x:hidden; }
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius:3px; }
+
+/* ═══════════════════ TOP NAV ═══════════════════ */
+.topnav {
+  display:flex; align-items:center; gap:0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  height: 52px;
+  position: sticky; top:0; z-index:100;
+}
+.topnav .logo {
+  font-weight:800; font-size:16px; letter-spacing:-.3px;
+  color: var(--accent);
+  margin-right: 32px;
+  display:flex; align-items:center; gap:8px;
+}
+.topnav .logo svg { width:22px; height:22px; }
+.topnav .nav-tabs { display:flex; gap:0; height:100%; }
+.nav-tab {
+  padding: 0 20px; height:52px; display:flex; align-items:center; gap:6px;
+  font-size:13px; font-weight:600; color: var(--text-muted);
+  cursor:pointer; border-bottom: 2px solid transparent;
+  transition: var(--transition); background:none; border-left:none; border-right:none; border-top:none;
+  white-space: nowrap;
+}
+.nav-tab:hover { color: var(--text); background: rgba(255,255,255,.03); }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.nav-tab svg { width:16px; height:16px; }
+.topnav .right-section { margin-left:auto; display:flex; align-items:center; gap:8px; }
+.btn-sm {
+  padding: 6px 14px; border-radius: var(--radius-sm);
+  font-size:12px; font-weight:600; cursor:pointer;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  color: var(--text-muted);
+  transition: var(--transition);
+  display:flex; align-items:center; gap:5px;
+}
+.btn-sm:hover { background: var(--surface3); color: var(--text); }
+.btn-sm.primary { background: var(--accent); color:#fff; border-color: var(--accent); }
+.btn-sm.primary:hover { opacity:.9; }
+
+/* ═══════════════════ LAYOUT ═══════════════════ */
+.app-container { display:none; }
+.app-container.active { display:flex; }
+.sidebar {
+  width:200px; min-width:200px;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: 12px 0;
+  height: calc(100vh - 52px);
+  position:sticky; top:52px;
+  overflow-y:auto;
+}
+.sidebar .side-section { padding: 8px 12px 4px; font-size:10px; text-transform:uppercase; letter-spacing:.8px; color: var(--text-dim); font-weight:700; }
+.side-item {
+  display:flex; align-items:center; gap:8px;
+  padding: 8px 16px; font-size:13px; font-weight:500;
+  color: var(--text-muted); cursor:pointer;
+  transition: var(--transition); border:none; background:none; width:100%; text-align:left;
+}
+.side-item:hover { background: rgba(255,255,255,.04); color: var(--text); }
+.side-item.active { background: var(--accent-dim); color: var(--accent); border-right: 2px solid var(--accent); }
+.side-item svg { width:16px; height:16px; flex-shrink:0; }
+.main-content {
+  flex:1; padding:20px 24px;
+  height: calc(100vh - 52px);
+  overflow-y:auto;
+}
+
+/* ═══════════════════ KPI CARDS ═══════════════════ */
+.kpi-row { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  flex:1; min-width:140px;
+  position:relative; overflow:hidden;
+  transition: var(--transition);
+}
+.kpi-card:hover { border-color: var(--border-light); }
+.kpi-card .kl { font-size:11px; text-transform:uppercase; letter-spacing:.4px; color: var(--text-muted); margin-bottom:4px; }
+.kpi-card .kv { font-size:24px; font-weight:800; letter-spacing:-.5px; }
+.kpi-card .kd { font-size:12px; font-weight:600; margin-top:2px; }
+.kpi-card .kd.up { color: var(--green); }
+.kpi-card .kd.down { color: var(--red); }
+.kpi-card .kd.flat { color: var(--text-dim); }
+.kpi-card .ksub { font-size:10px; color: var(--text-dim); margin-top:1px; }
+.kpi-bar-bottom { position:absolute; bottom:0; left:0; height:2px; transition: width .5s ease; }
+
+/* ═══════════════════ SECTION & CARDS ═══════════════════ */
+.section-title { font-size:15px; font-weight:700; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+.section-title .badge { font-size:10px; background: var(--accent); color:#fff; padding:2px 8px; border-radius:10px; font-weight:700; }
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+.card-header h3 { font-size:14px; font-weight:700; }
+.grid-2 { display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+.grid-3 { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px; }
+
+/* ═══════════════════ HEATMAP TABLE ═══════════════════ */
+.hm-table { width:100%; border-collapse:collapse; font-size:12px; }
+.hm-table th { padding:8px 10px; text-align:left; font-size:10px; text-transform:uppercase; letter-spacing:.4px; color: var(--text-dim); font-weight:700; border-bottom:1px solid var(--border); white-space:nowrap; position:sticky; top:0; background: var(--surface); z-index:1; }
+.hm-table td { padding:7px 10px; border-bottom:1px solid rgba(36,48,80,.5); white-space:nowrap; }
+.hm-table tr { cursor:pointer; transition: var(--transition); }
+.hm-table tr:hover { background: rgba(255,255,255,.03); }
+.hm-cell { display:inline-block; padding:2px 8px; border-radius:4px; font-weight:600; font-size:11px; text-align:center; min-width:50px; }
+.tag-scale { background: var(--green-dim); color: var(--green); }
+.tag-improve { background: var(--amber-dim); color: var(--amber); }
+.tag-fix { background: var(--red-dim); color: var(--red); }
+.conf-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; vertical-align:middle; }
+
+/* ═══════════════════ CHARTS (SVG) ═══════════════════ */
+.chart-wrap { width:100%; overflow:hidden; }
+.chart-wrap svg { width:100%; height:auto; }
+svg text { font-family: var(--font); }
+
+/* ═══════════════════ MODAL ═══════════════════ */
+.modal-overlay {
+  display:none; position:fixed; top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,.6); z-index:200;
+  align-items:center; justify-content:center;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding:28px; max-width:800px; width:90vw;
+  max-height:85vh; overflow-y:auto;
+  box-shadow: 0 16px 48px rgba(0,0,0,.5);
+}
+.modal h2 { font-size:18px; margin-bottom:16px; }
+.modal .close-x { position:absolute; top:16px; right:20px; background:none; border:none; color: var(--text-muted); font-size:20px; cursor:pointer; }
+
+/* ═══════════════════ COMPANY DETAIL PANEL ═══════════════════ */
+.detail-panel {
+  position:fixed; top:52px; right:0; width:520px; height:calc(100vh - 52px);
+  background: var(--surface); border-left:1px solid var(--border);
+  box-shadow: -8px 0 24px rgba(0,0,0,.3);
+  z-index:50; overflow-y:auto; padding:24px;
+  transform: translateX(100%); transition: transform .3s ease;
+}
+.detail-panel.open { transform: translateX(0); }
+.detail-panel .close-btn { position:absolute; top:16px; right:16px; background:none; border:none; color: var(--text-muted); font-size:18px; cursor:pointer; }
+
+/* ═══════════════════ SCENARIO SLIDERS ═══════════════════ */
+.lever-group { margin-bottom:16px; }
+.lever-group-title { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color: var(--text-muted); margin-bottom:10px; padding-bottom:6px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:6px; }
+.lever-group-title .dot { width:8px; height:8px; border-radius:50%; }
+.lever-item { margin-bottom:14px; }
+.lever-label { display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px; }
+.lever-label .lval { font-weight:700; color: var(--accent); }
+input[type=range] {
+  -webkit-appearance:none; appearance:none;
+  width:100%; height:4px; border-radius:2px;
+  background: var(--border); outline:none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px;
+  border-radius:50%; background: var(--accent);
+  cursor:pointer; border:2px solid var(--surface);
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+input[type=range]::-moz-range-thumb {
+  width:14px; height:14px; border-radius:50%;
+  background: var(--accent); cursor:pointer;
+  border:2px solid var(--surface);
+}
+.lever-impact { font-size:10px; color: var(--green); margin-top:2px; min-height:14px; }
+
+/* ═══════════════════ MAP ═══════════════════ */
+.map-container { background: var(--bg2); border-radius: var(--radius); overflow:hidden; position:relative; }
+.map-container svg { display:block; }
+.map-legend { position:absolute; bottom:12px; left:12px; background: rgba(15,21,32,.9); border:1px solid var(--border); border-radius: var(--radius-sm); padding:10px 14px; font-size:11px; }
+.map-legend .leg-item { display:flex; align-items:center; gap:6px; margin-bottom:3px; }
+.map-legend .leg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+
+/* ═══════════════════ PRIORITY / TRACKER ═══════════════════ */
+.tracker-row { display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px solid rgba(36,48,80,.4); font-size:12px; }
+.tracker-row:last-child { border-bottom:none; }
+.status-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.status-dot.green { background: var(--green); }
+.status-dot.amber { background: var(--amber); }
+.status-dot.red { background: var(--red); }
+.status-dot.blue { background: var(--accent); }
+.progress-bar { height:4px; border-radius:2px; background: var(--border); flex:1; max-width:120px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:2px; transition: width .4s; }
+
+/* ═══════════════════ SCREENING ═══════════════════ */
+.score-bar { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.score-bar .sbl { font-size:11px; width:110px; color: var(--text-muted); }
+.score-bar .sb-track { flex:1; height:6px; background: var(--border); border-radius:3px; overflow:hidden; }
+.score-bar .sb-fill { height:100%; border-radius:3px; transition: width .4s; }
+.score-bar .sb-val { font-size:12px; font-weight:700; min-width:32px; text-align:right; }
+
+/* ═══════════════════ ADJACENCY MATRIX ═══════════════════ */
+.adj-matrix { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:12px; }
+.adj-col { border-radius: var(--radius); padding:16px; }
+.adj-col.core { background: rgba(14,165,233,.08); border:1px solid rgba(14,165,233,.2); }
+.adj-col.adjacent { background: rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.2); }
+.adj-col.expand { background: rgba(139,92,246,.08); border:1px solid rgba(139,92,246,.2); }
+.adj-col h4 { font-size:13px; margin-bottom:10px; font-weight:700; }
+.adj-item { font-size:12px; padding:4px 0; color: var(--text-muted); border-bottom:1px solid rgba(36,48,80,.3); }
+.adj-item:last-child { border-bottom:none; }
+
+/* ═══════════════════ UTILITY ═══════════════════ */
+.text-green { color: var(--green); }
+.text-amber { color: var(--amber); }
+.text-red { color: var(--red); }
+.text-accent { color: var(--accent); }
+.text-muted { color: var(--text-muted); }
+.text-dim { color: var(--text-dim); }
+.fw-800 { font-weight:800; }
+.fs-sm { font-size:12px; }
+.fs-xs { font-size:11px; }
+.mt-8 { margin-top:8px; }
+.mt-16 { margin-top:16px; }
+.mb-8 { margin-bottom:8px; }
+.mb-16 { margin-bottom:16px; }
+.flex { display:flex; }
+.flex-wrap { flex-wrap:wrap; }
+.gap-8 { gap:8px; }
+.gap-12 { gap:12px; }
+.gap-16 { gap:16px; }
+.items-center { align-items:center; }
+.justify-between { justify-content:space-between; }
+
+/* ═══════════════════ TOOLTIP ═══════════════════ */
+[data-tip] { position:relative; cursor:help; }
+[data-tip]:hover::after {
+  content: attr(data-tip);
+  position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+  background: var(--surface3); color: var(--text); border:1px solid var(--border);
+  padding:6px 10px; border-radius: var(--radius-sm);
+  font-size:11px; white-space:nowrap; z-index:50; pointer-events:none;
+  box-shadow: var(--shadow);
+}
+
+/* ═══════════════════ RESPONSIVE ═══════════════════ */
+@media(max-width:1100px) {
+  .sidebar { width:60px; min-width:60px; }
+  .side-item span { display:none; }
+  .side-item { justify-content:center; padding:10px; }
+  .side-section { display:none; }
+  .grid-2, .grid-3 { grid-template-columns:1fr; }
+  .detail-panel { width:100%; }
+}
+@media(max-width:768px) {
+  .kpi-row { flex-direction:column; }
+  .adj-matrix { grid-template-columns:1fr; }
+}
+
+/* ═══════════════════ CSV EXPORT ═══════════════════ */
+.export-btn { background:none; border:1px solid var(--border); color: var(--text-dim); padding:4px 10px; border-radius: var(--radius-sm); font-size:10px; cursor:pointer; transition: var(--transition); }
+.export-btn:hover { color: var(--text); border-color: var(--border-light); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ TOP NAVIGATION ═══════════════════ -->
+<nav class="topnav">
+  <div class="logo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12c0-2.5 1.5-5 4-5s4 2.5 4 5-1.5 5-4 5-4-2.5-4-5z"/><path d="M2 12h4M18 12h4"/></svg>
+    Submara
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="switchApp('app1',this)" id="tab-app1">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Portefølje Cockpit
+    </button>
+    <button class="nav-tab" onclick="switchApp('app2',this)" id="tab-app2">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      Strategy &amp; M&amp;A Navigator
+    </button>
+  </div>
+  <div class="right-section">
+    <button class="btn-sm" onclick="openAbout()">ℹ About</button>
+    <button class="btn-sm" onclick="openDataModal()">📊 Data &amp; Sources</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════ APP 1: PORTFOLIO COCKPIT ═══════════════════ -->
+<div class="app-container active" id="app1">
+  <aside class="sidebar" id="sidebar1">
+    <div class="side-section">Portefølje</div>
+    <button class="side-item active" onclick="showView1('overview',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0v-6"/></svg><span>Oversikt</span></button>
+    <button class="side-item" onclick="showView1('heatmap',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg><span>Heatmap</span></button>
+    <button class="side-item" onclick="showView1('value',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg><span>Verdiskaping</span></button>
+    <div class="side-section">Oppfølging</div>
+    <button class="side-item" onclick="showView1('cadence',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>CEO Cadence</span></button>
+    <button class="side-item" onclick="showView1('tracker',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg><span>100-dager</span></button>
+    <button class="side-item" onclick="showView1('safety',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg><span>HMS &amp; Kultur</span></button>
+    <div class="side-section">Analyse</div>
+    <button class="side-item" onclick="showView1('scenario',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 0V9m0 3a2 2 0 100 4m0-4a2 2 0 110 4m6-8v8"/></svg><span>Scenario</span></button>
+  </aside>
+  <main class="main-content" id="mc1"></main>
+</div>
+
+<!-- ═══════════════════ APP 2: STRATEGY & M&A ═══════════════════ -->
+<div class="app-container" id="app2">
+  <aside class="sidebar" id="sidebar2">
+    <div class="side-section">Strategi</div>
+    <button class="side-item active" onclick="showView2('mapma',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg><span>Kart &amp; M&amp;A</span></button>
+    <button class="side-item" onclick="showView2('screening',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Screening</span></button>
+    <button class="side-item" onclick="showView2('markets',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8v8m-4-5v5m-4-2v2m-2 4h16a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Markeder</span></button>
+    <button class="side-item" onclick="showView2('adjacency',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="11" stroke-dasharray="4 2"/></svg><span>Adjacency</span></button>
+    <div class="side-section">Anbefaling</div>
+    <button class="side-item" onclick="showView2('recommendations',this)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg><span>Anbefalinger</span></button>
+  </aside>
+  <main class="main-content" id="mc2"></main>
+</div>
+
+<!-- ═══════════════════ COMPANY DETAIL PANEL ═══════════════════ -->
+<div class="detail-panel" id="detailPanel">
+  <button class="close-btn" onclick="closeDetail()">✕</button>
+  <div id="detailContent"></div>
+</div>
+
+<!-- ═══════════════════ ABOUT MODAL ═══════════════════ -->
+<div class="modal-overlay" id="aboutModal">
+  <div class="modal" style="position:relative">
+    <button class="close-x" onclick="closeAbout()">✕</button>
+    <h2>Om dette verktøyet</h2>
+    <p class="fs-sm text-muted mb-16">Denne prototypen er utviklet som en case-bonus for rollen som porteføljedirektør i Submara. Verktøyet demonstrerer hvordan en integrert beslutningsstøtteplattform kan støtte:</p>
+    <div class="grid-2 mb-16" style="font-size:12px">
+      <div class="card" style="margin:0"><strong class="text-accent">App 1: Portefølje Cockpit</strong><br>Operasjonell styring, KPI-oppfølging, verdiskapingsanalyse, CEO-oppfølging, HMS-kultur og scenariomodellering for hele porteføljen.</div>
+      <div class="card" style="margin:0"><strong class="text-accent">App 2: Strategy & M&A Navigator</strong><br>Strategisk navigasjon, M&A-pipeline, screening av kandidater, markedsattraktivitet, drivere og anbefalingsmotor.</div>
+    </div>
+    <p class="fs-sm text-muted mb-8"><strong>Teknisk:</strong> Én selvkjørende HTML-fil. Ingen backend, ingen CDN. All data, styling og logikk er inline. Fungerer offline.</p>
+    <p class="fs-sm text-muted"><strong>Datakvalitet:</strong> Se "Data & Sources" for full oversikt over kilder, observert data, estimater og antakelser.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════ DATA MODAL ═══════════════════ -->
+<div class="modal-overlay" id="dataModal">
+  <div class="modal" style="position:relative;max-width:900px">
+    <button class="close-x" onclick="closeDataModal()">✕</button>
+    <h2 class="mb-16">Data, kilder og antakelser</h2>
+    <div id="dataModalContent"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     JAVASCRIPT: DATA + LOGIC + RENDERING
+     ═══════════════════════════════════════════════════════════ -->
+<script>
+// ═══════════════════ DATA MODEL ═══════════════════
+const D = {
+  platform: { name:'Submara', hq:'Sætre, Asker', merged:2023, totalEmp:196, website:'submara.no' },
+  // Portfolio companies with verified + estimated data
+  companies: [
+    { id:'sp', name:'Submara Prosjekt AS', brand:'Dykkerteknikk / Anleggsdykk', loc:'Sætre, Asker', region:'Østlandet', lat:59.68, lon:10.50, founded:1976, emp:52, ceo:'Fredrik Holen Breiby', segments:['Kabel','Vann & avløp','Anlegg','Survey & ROV'], services:['ROV','Kabel','VA-arbeid','Survey','Anleggsdykking'], status:'Scale',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[105,118,138,158,175], ebitda:[7.4,9.4,12.4,14.2,15.8] },
+      kpis:{ util:72, hit:34, backlog:95, ltif:1.8, sick:3.8, turnover:7, quality:82, custConc:30, framework:52, onTime:85, onBudget:80 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. Historical rev estimated from growth trajectory. EBITDA estimated at 8-9% typical for this segment.'
+    },
+    { id:'imc', name:'IMC Diving AS', brand:'IMC Diving', loc:'Bergen', region:'Vestland', lat:60.39, lon:5.32, founded:1982, emp:25, ceo:'Jørn Oksnes', segments:['Anlegg','Skip & rigger','Vann & avløp'], services:['Commercial diving','Marine construction','Ship inspection','Hull cleaning'], status:'Scale',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[48,54,60,66,73], ebitda:[3.8,4.9,5.4,6.3,7.3] },
+      kpis:{ util:70, hit:30, backlog:68, ltif:2.2, sick:4.1, turnover:9, quality:78, custConc:28, framework:40, onTime:80, onBudget:76 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. Bergen is a key hub for maritime services.'
+    },
+    { id:'oeh', name:'Olav Erik Hagen AS', brand:'O.E. Hagen', loc:'Stryn', region:'Vestland', lat:61.90, lon:6.72, founded:1991, emp:29, ceo:'Olav Erik Hagen', segments:['Anlegg','Survey & ROV','Kabel'], services:['Complex diving','Tunnel inspection (NTI)','ROV','Power infrastructure'], status:'Scale',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[38,44,52,60,68], ebitda:[3.0,3.5,4.7,5.4,6.8] },
+      kpis:{ util:68, hit:28, backlog:72, ltif:1.5, sick:3.5, turnover:6, quality:85, custConc:32, framework:35, onTime:88, onBudget:82 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. Includes NTI subsidiary (tunnel inspection). Strong safety and quality profile.'
+    },
+    { id:'ebm', name:'EB Marine AS', brand:'EB Marine', loc:'Stavanger', region:'Rogaland', lat:58.97, lon:5.73, founded:1983, emp:12, ceo:'Rune Løge', segments:['Anlegg','Skip & rigger'], services:['Maritime construction','Underwater blasting','Harbour work','Quay construction'], status:'Improve',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[28,30,33,35,38], ebitda:[1.7,1.8,2.3,2.5,2.7] },
+      kpis:{ util:62, hit:26, backlog:42, ltif:2.8, sick:4.8, turnover:12, quality:72, custConc:42, framework:30, onTime:75, onBudget:70 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. Stavanger region, maritime construction focus. Needs utilization and margin improvement.'
+    },
+    { id:'dk', name:'Dykkerkompaniet AS', brand:'Dykkerkompaniet', loc:'Svolvær', region:'Nordland', lat:68.23, lon:14.57, founded:2005, emp:22, ceo:'Egil Johan Krane', segments:['Anlegg','Vann & avløp','Kabel'], services:['Underwater construction','Emergency diving','Cable work','VA projects'], status:'Scale',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[20,24,28,32,36], ebitda:[1.6,2.2,2.5,2.9,3.6] },
+      kpis:{ util:67, hit:32, backlog:55, ltif:2.0, sick:4.0, turnover:8, quality:80, custConc:35, framework:42, onTime:82, onBudget:78 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. Northern Norway presence, strong growth trajectory.'
+    },
+    { id:'fd', name:'Falck Dykkertjeneste AS', brand:'Falck Dykkertjeneste', loc:'Gamle Fredrikstad', region:'Østfold', lat:59.21, lon:10.93, founded:1995, emp:20, ceo:'Tommy Svendsen', segments:['Anlegg','Vann & avløp'], services:['Diving operations','Infrastructure inspection','Construction diving','ISO 9001 certified'], status:'Improve',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[18,20,22,24,26], ebitda:[1.1,1.2,1.5,1.7,1.8] },
+      kpis:{ util:60, hit:24, backlog:38, ltif:2.5, sick:5.0, turnover:11, quality:75, custConc:38, framework:35, onTime:78, onBudget:72 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. ISO 9001 certified. Needs utilization improvement — underperforming relative to capacity.'
+    },
+    { id:'bd', name:'Buskerud Dykkerservice AS', brand:'Buskerud Dykkerservice', loc:'Kongsberg', region:'Buskerud', lat:59.67, lon:9.65, founded:1988, emp:15, ceo:'Morten Sivertzen', segments:['Anlegg','Vann & avløp'], services:['Inland diving specialist','Mobile equipment','Dam inspection','VA work'], status:'Improve',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[14,16,19,22,25], ebitda:[0.8,1.0,1.3,1.5,1.7] },
+      kpis:{ util:58, hit:22, backlog:30, ltif:3.0, sick:5.2, turnover:10, quality:70, custConc:45, framework:28, onTime:72, onBudget:68 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. Inland specialist — strong niche but needs commercial improvement.'
+    },
+    { id:'fg', name:'Fagdykk AS', brand:'Fagdykk', loc:'Tromsø', region:'Troms', lat:69.65, lon:18.96, founded:2008, emp:12, ceo:'Arild Stenmo Tobiassen', segments:['Anlegg','Kabel','Skip & rigger'], services:['Commercial diving','Power/telecom','Ship inspection','DNV/BV certified'], status:'Fix',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[12,14,16,18,20], ebitda:[0.4,0.6,0.8,0.9,1.0] },
+      kpis:{ util:55, hit:20, backlog:22, ltif:3.2, sick:5.8, turnover:14, quality:68, custConc:50, framework:22, onTime:70, onBudget:65 },
+      conf:'Observed', confNote:'Revenue 2024 & employees from Proff.no. Northernmost entity. Needs significant improvement in utilization and backlog.'
+    },
+    { id:'go', name:'Geir Øye AS', brand:'G. Øye', loc:'Skåla, Molde', region:'Møre og Romsdal', lat:62.47, lon:7.16, founded:1986, emp:10, ceo:'Alf Sivert Lyster', segments:['Anlegg','Survey & ROV','Skip & rigger'], services:['Subsea inspection','Construction diving','DNV ship controller','Marine surveys','Environmental studies'], status:'Improve',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[12,14,16,19,22], ebitda:[0.7,0.8,1.1,1.3,1.5] },
+      kpis:{ util:60, hit:25, backlog:28, ltif:2.4, sick:4.5, turnover:8, quality:76, custConc:40, framework:30, onTime:78, onBudget:74 },
+      conf:'Estimated', confNote:'Location and services from submara.no. Revenue estimated based on employee count (~10) and typical revenue per employee for diving services (~2 MNOK/emp).'
+    },
+    { id:'lw', name:'Lundsett & Walle Dykkerservice', brand:'LWD', loc:'Stathelle', region:'Telemark', lat:59.02, lon:9.68, founded:2010, emp:8, ceo:'Mats Lundsett', segments:['Anlegg','Vann & avløp'], services:['Construction diving','VA work','Inspection'], status:'Improve',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[6,8,10,12,15], ebitda:[0.3,0.4,0.6,0.7,0.9] },
+      kpis:{ util:58, hit:22, backlog:18, ltif:2.6, sick:4.8, turnover:10, quality:72, custConc:48, framework:25, onTime:74, onBudget:70 },
+      conf:'Estimated', confNote:'Contact info from submara.no. Revenue estimated from employee count (~8) and segment benchmarks.'
+    },
+    { id:'ss', name:'Submara Survey AS', brand:'Submara Survey', loc:'Stryn / Frogner', region:'Multi-region', lat:61.90, lon:6.72, founded:2016, emp:15, ceo:'Sigbjørn Hagen', segments:['Survey & ROV'], services:['Multibeam sonar','ROV inspection','Tunnel inspection','Hydrographic survey','Digital documentation'], status:'Scale',
+      fin:{ years:[2020,2021,2022,2023,2024], rev:[2,3,4,5,5], ebitda:[0.1,0.2,0.3,0.3,0.4] },
+      kpis:{ util:52, hit:35, backlog:15, ltif:0.5, sick:2.8, turnover:5, quality:90, custConc:25, framework:20, onTime:92, onBudget:88 },
+      conf:'Observed', confNote:'Revenue 2024 from Proff.no (5.3 MNOK). Includes NTI (tunnel inspection). Growing niche with high-tech positioning.'
+    }
+  ],
+
+  // M&A candidates
+  maTargets: [
+    { id:'t1', name:'Bergen Dykkerselskap AS', country:'NO', loc:'Bergen', lat:60.39, lon:5.33, segment:'Anlegg', estRev:30, estEmp:18, fit:{strat:82, comm:75, ops:80, geo:85}, synergy:72, complexity:'Low', conf:'Inferred', rec:'Prioritize', note:'Complementary to IMC in Bergen region. Would strengthen Vestland presence.' },
+    { id:'t2', name:'Nordvest Dykk AS', country:'NO', loc:'Ålesund', lat:62.47, lon:6.15, segment:'Anlegg / Skip', estRev:22, estEmp:14, fit:{strat:78, comm:70, ops:75, geo:72}, synergy:68, complexity:'Low', rec:'Engage', conf:'Estimated', note:'Fills geographic gap in Møre og Romsdal between G. Øye and Trondheim.' },
+    { id:'t3', name:'Trønder Dykk AS', country:'NO', loc:'Trondheim', lat:63.43, lon:10.40, segment:'Anlegg / VA', estRev:35, estEmp:20, fit:{strat:85, comm:78, ops:82, geo:90}, synergy:78, complexity:'Medium', rec:'Prioritize', conf:'Estimated', note:'Trøndelag is key white spot. Strong VA market driven by municipal investments.' },
+    { id:'t4', name:'Sjødykk Stavanger AS', country:'NO', loc:'Stavanger', lat:58.97, lon:5.73, segment:'Skip & rigger', estRev:18, estEmp:10, fit:{strat:70, comm:65, ops:72, geo:88}, synergy:62, complexity:'Low', rec:'Track', conf:'Estimated', note:'Ship/rig focused — would add capability to EB Marine hub. Cyclical exposure.' },
+    { id:'t5', name:'AquaScan Nordic AS', country:'NO', loc:'Oslo', lat:59.91, lon:10.75, segment:'Survey & ROV', estRev:15, estEmp:8, fit:{strat:80, comm:72, ops:68, geo:70}, synergy:65, complexity:'Medium', rec:'Engage', conf:'Estimated', note:'Digital survey tech — supports Submara Survey growth. Technology play.' },
+    { id:'t6', name:'DykTeknik AB', country:'SE', loc:'Göteborg', lat:57.71, lon:11.97, segment:'Anlegg / VA', estRev:45, estEmp:28, fit:{strat:82, comm:68, ops:72, geo:65}, synergy:70, complexity:'High', rec:'Track', conf:'Estimated', note:'Sweden entry. Göteborg strong port/infrastructure market. Cultural alignment.' },
+    { id:'t7', name:'Marin Entreprenad AB', country:'SE', loc:'Malmö', lat:55.60, lon:13.00, segment:'Marine anlegg', estRev:55, estEmp:32, fit:{strat:78, comm:65, ops:70, geo:60}, synergy:65, complexity:'High', rec:'Track', conf:'Estimated', note:'Southern Sweden / Øresund corridor. Bridge/tunnel maintenance market.' },
+    { id:'t8', name:'Scandinavian Divers AB', country:'SE', loc:'Stockholm', lat:59.33, lon:18.07, segment:'Anlegg / Survey', estRev:38, estEmp:22, fit:{strat:75, comm:62, ops:68, geo:55}, synergy:60, complexity:'High', rec:'Track', conf:'Estimated', note:'Stockholm market — freshwater infrastructure. Different regulatory environment.' },
+    { id:'t9', name:'Dansk Dykkerservice ApS', country:'DK', loc:'København', lat:55.68, lon:12.57, segment:'Anlegg / Kabel', estRev:40, estEmp:24, fit:{strat:80, comm:70, ops:72, geo:62}, synergy:68, complexity:'Medium', rec:'Engage', conf:'Estimated', note:'Denmark entry. Offshore wind cable market growing fast. Bridge maintenance.' },
+    { id:'t10', name:'Nordic Marine Works ApS', country:'DK', loc:'Esbjerg', lat:55.47, lon:8.45, segment:'Kabel / Offshore', estRev:52, estEmp:30, fit:{strat:76, comm:68, ops:70, geo:58}, synergy:64, complexity:'Medium', rec:'Track', conf:'Estimated', note:'Esbjerg = energy hub. Offshore wind synergies. Higher complexity.' },
+    { id:'t11', name:'Briggs Marine UK', country:'UK', loc:'Fife, Scotland', lat:56.20, lon:-3.15, segment:'Marine services', estRev:180, estEmp:120, fit:{strat:72, comm:55, ops:60, geo:40}, synergy:50, complexity:'Very High', rec:'Track', conf:'Inferred', note:'Major UK marine contractor. Likely too large for near-term but strategic reference.' },
+    { id:'t12', name:'Hughes Sub Surface', country:'UK', loc:'Plymouth', lat:50.38, lon:-4.14, segment:'Diving / inspection', estRev:25, estEmp:18, fit:{strat:70, comm:58, ops:62, geo:35}, synergy:45, complexity:'High', rec:'Track', conf:'Estimated', note:'UK beachhead candidate. Niche subsurface services. Different regulatory framework.' },
+    { id:'t13', name:'SubC Engineering AS', country:'NO', loc:'Haugesund', lat:59.41, lon:5.27, segment:'ROV / Survey', estRev:28, estEmp:15, fit:{strat:84, comm:75, ops:78, geo:82}, synergy:75, complexity:'Medium', rec:'Prioritize', conf:'Estimated', note:'ROV/survey specialist. Complements Submara Survey. Technology synergies.' },
+    { id:'t14', name:'Vest Dykk AS', country:'NO', loc:'Haugesund', lat:59.41, lon:5.27, segment:'Anlegg', estRev:16, estEmp:10, fit:{strat:72, comm:68, ops:74, geo:80}, synergy:66, complexity:'Low', rec:'Engage', conf:'Estimated', note:'Regional diving company. Simple add-on to Rogaland cluster.' },
+  ],
+
+  // Market data per country/segment
+  markets: [
+    { country:'Norge', flag:'🇳🇴', size:4800, growth:6.5, frag:75, compInt:65, regBar:55, relevance:95, segments:[
+      { name:'Vann & avløp', size:1800, growth:8, note:'Norsk Vann: 300+ mrd NOK vedlikeholdsetterslep over 20 år' },
+      { name:'Kabel / energi', size:900, growth:7, note:'Elektrifisering, sjøkabler, vindkraft-tilknytning' },
+      { name:'Marine anlegg', size:800, growth:5, note:'Havn, kai, broer, dokker — offentlig vedlikehold' },
+      { name:'Survey & ROV', size:450, growth:12, note:'Digitalisering, dokumentasjonskrav, tunnel/dam inspeksjon' },
+      { name:'Skip & rigger', size:600, growth:3, note:'Skipsinspeksjon, hull cleaning, klassifisering' },
+      { name:'Tunnel / inspeksjon', size:250, growth:15, note:'Vannkrafttunneler, bro/dam — stort etterslep' }
+    ]},
+    { country:'Sverige', flag:'🇸🇪', size:3200, growth:5.0, frag:65, compInt:60, regBar:50, relevance:70, segments:[
+      { name:'Vann & avløp', size:1200, growth:6, note:'Lignende VA-etterslep som Norge' },
+      { name:'Marine anlegg', size:700, growth:4, note:'Havner, infrastruktur Göteborg/Malmö/Stockholm' },
+      { name:'Kabel / energi', size:500, growth:8, note:'Offshore vind i Östersjöen' },
+      { name:'Survey & ROV', size:300, growth:10, note:'Voksende digitalt segment' }
+    ]},
+    { country:'Danmark', flag:'🇩🇰', size:2800, growth:5.5, frag:60, compInt:70, regBar:45, relevance:65, segments:[
+      { name:'Kabel / offshore', size:1000, growth:9, note:'Verdensledende offshore vind — Esbjerg hub' },
+      { name:'Marine anlegg', size:600, growth:4, note:'Bro-vedlikehold (Storebælt, Øresund)' },
+      { name:'Vann & avløp', size:500, growth:5, note:'København stor infrastruktur' },
+      { name:'Survey & ROV', size:250, growth:11, note:'Vindpark-inspeksjon' }
+    ]},
+    { country:'UK', flag:'🇬🇧', size:8500, growth:4.0, frag:55, compInt:80, regBar:70, relevance:40, segments:[
+      { name:'Offshore energi', size:3000, growth:5, note:'North Sea, offshore wind, decommissioning' },
+      { name:'Marine anlegg', size:2000, growth:3, note:'Havner, forsvar, infrastruktur' },
+      { name:'Survey & ROV', size:1200, growth:8, note:'Stort og modent marked' },
+      { name:'Vann & avløp', size:1500, growth:4, note:'Regulert marked, store kontrakter' }
+    ]}
+  ],
+
+  // 100-day initiatives
+  initiatives: [
+    { id:1, title:'Felles tiltaksplan for utnyttelsesgrad', cat:'Operasjonelt', company:'Alle', effect:'+8-12 MNOK', time:'3-6 mnd', owner:'Porteføljedirektør', status:'green', progress:0.7, kpi:'Kapasitetsutnyttelse' },
+    { id:2, title:'Etablere felles prisdisiplin og tilbudsmal', cat:'Kommersielt', company:'Alle', effect:'+5-8 MNOK', time:'2-4 mnd', owner:'Porteføljedirektør + CEOs', status:'amber', progress:0.4, kpi:'EBITDA-margin' },
+    { id:3, title:'Kryss-salg kickoff: fellesrevisjoner av kundebase', cat:'Synergi', company:'Alle', effect:'+3-6 MNOK', time:'3-6 mnd', owner:'CEOs', status:'amber', progress:0.3, kpi:'Kryss-salg leads' },
+    { id:4, title:'HMS & kultur baseline-kartlegging', cat:'HMS/Kvalitet', company:'Alle', effect:'Risikored.', time:'1-3 mnd', owner:'HMS-ansvarlig', status:'green', progress:0.8, kpi:'LTIF, Hendelser' },
+    { id:5, title:'Felles innkjøpsavtaler for utstyr og forbruk', cat:'Innkjøp', company:'Alle', effect:'+2-4 MNOK', time:'3-6 mnd', owner:'CFO', status:'amber', progress:0.35, kpi:'Innkjøpskostnad' },
+    { id:6, title:'CEO monthly review template og prosess', cat:'Organisasjon', company:'Alle', effect:'Strukturelt', time:'1 mnd', owner:'Porteføljedirektør', status:'green', progress:0.9, kpi:'CEO confidence' },
+    { id:7, title:'Backlog-bygging: identifisere 5 nøkkelprosjekter', cat:'Kommersielt', company:'EBM, FD, BD', effect:'+10-15 MNOK rev', time:'3-6 mnd', owner:'CEOs', status:'red', progress:0.15, kpi:'Backlog / B2B' },
+    { id:8, title:'Ressursdeling mellom nærliggende selskaper', cat:'Synergi', company:'SP, FD, BD, LWD', effect:'+2-3 MNOK', time:'2-4 mnd', owner:'Ops-ledere', status:'amber', progress:0.25, kpi:'Utstyrsutnyttelse' },
+    { id:9, title:'Digital modenhetsvurdering og roadmap', cat:'Strategi', company:'Alle', effect:'Langsiktig', time:'3-6 mnd', owner:'CTO/Porteføljedirektør', status:'amber', progress:0.2, kpi:'Digital modenhet' },
+    { id:10, title:'M&A shortlist og screening av Trøndelag-kandidater', cat:'Strategi', company:'Konsern', effect:'Inorganisk vekst', time:'1-3 mnd', owner:'Porteføljedirektør', status:'green', progress:0.6, kpi:'Pipeline' },
+    { id:11, title:'Standardisere prosjektrapportering og avviksbehandling', cat:'Operasjonelt', company:'Alle', effect:'+1-3 MNOK', time:'2-4 mnd', owner:'Ops-ledere', status:'amber', progress:0.3, kpi:'Prosjektavvik' },
+    { id:12, title:'EB Marine og Fagdykk: turnaround-plan', cat:'Organisasjon', company:'EBM, FG', effect:'+3-5 MNOK', time:'6-12 mnd', owner:'Porteføljedirektør + CEOs', status:'red', progress:0.1, kpi:'EBITDA' },
+  ]
+};
+
+// ═══════════════════ HELPERS ═══════════════════
+function fmt(n,d=0){return n.toFixed(d).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
+function pct(n){return n.toFixed(1)+'%';}
+function margin(c,y){ const i=c.fin.years.indexOf(y); return i>=0?(c.fin.ebitda[i]/c.fin.rev[i]*100):0; }
+function latestRev(c){ return c.fin.rev[c.fin.rev.length-1]; }
+function latestEbitda(c){ return c.fin.ebitda[c.fin.ebitda.length-1]; }
+function latestMargin(c){ return latestEbitda(c)/latestRev(c)*100; }
+function sumLatestRev(){ return D.companies.reduce((s,c)=>s+latestRev(c),0); }
+function sumLatestEbitda(){ return D.companies.reduce((s,c)=>s+latestEbitda(c),0); }
+function heatColor(val,lo,hi,inv=false){
+  const r=Math.max(0,Math.min(1,(val-lo)/(hi-lo)));
+  const a=inv?1-r:r;
+  if(a>.7) return 'var(--green)';
+  if(a>.4) return 'var(--amber)';
+  return 'var(--red)';
+}
+function statusTag(s){
+  const cls={Scale:'tag-scale',Improve:'tag-improve',Fix:'tag-fix'}[s]||'';
+  return `<span class="hm-cell ${cls}">${s}</span>`;
+}
+function confDot(c){
+  const color={Observed:'var(--green)',Estimated:'var(--amber)',Inferred:'var(--purple)'}[c]||'var(--text-dim)';
+  return `<span class="conf-dot" style="background:${color}" data-tip="${c}"></span>`;
+}
+function escHtml(t){const d=document.createElement('div');d.appendChild(document.createTextNode(t));return d.innerHTML;}
+
+// ═══════════════════ SVG CHART UTILITIES ═══════════════════
+function svgBar(data,opts={}){
+  const W=opts.w||540, H=opts.h||200, pad={t:20,r:20,b:40,l:50};
+  const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  const n=data.length, bw=Math.min(40,cw/n*.7), gap=(cw-bw*n)/(n+1);
+  const maxVal=opts.max||Math.max(...data.map(d=>d.v))*1.15;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  // Grid
+  for(let i=0;i<=4;i++){
+    const y=pad.t+ch-ch*(i/4);
+    svg+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#243050" stroke-width="0.5"/>`;
+    svg+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#4a5a75" font-size="9">${fmt(maxVal*i/4)}</text>`;
+  }
+  // Bars
+  data.forEach((d,i)=>{
+    const x=pad.l+gap+(bw+gap)*i;
+    const h=Math.max(0,(d.v/maxVal)*ch);
+    const y=pad.t+ch-h;
+    const col=d.color||opts.color||'#0ea5e9';
+    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="3" fill="${col}" opacity="0.85"><title>${d.l}: ${fmt(d.v,1)}</title></rect>`;
+    svg+=`<text x="${x+bw/2}" y="${H-pad.b+14}" text-anchor="middle" fill="#7a8ba8" font-size="8" transform="rotate(-30 ${x+bw/2} ${H-pad.b+14})">${d.l}</text>`;
+    if(d.v>0) svg+=`<text x="${x+bw/2}" y="${y-4}" text-anchor="middle" fill="#e2e8f0" font-size="8" font-weight="700">${fmt(d.v,1)}</text>`;
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+function svgWaterfall(data,opts={}){
+  const W=opts.w||600, H=opts.h||220, pad={t:25,r:20,b:45,l:50};
+  const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  const n=data.length, bw=Math.min(38,cw/n*.75), gap=(cw-bw*n)/(n+1);
+  let maxVal=0, running=0; const bases=[], heights=[];
+  data.forEach((d,i)=>{
+    if(i===0||i===data.length-1){ bases.push(0); heights.push(d.v); }
+    else { bases.push(running); heights.push(d.v); }
+    if(i===0) running=d.v; else if(i<data.length-1) running+=d.v;
+    maxVal=Math.max(maxVal,running,d.v);
+  });
+  maxVal*=1.2;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  for(let i=0;i<=4;i++){
+    const y=pad.t+ch-ch*(i/4);
+    svg+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#243050" stroke-width="0.5"/>`;
+    svg+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#4a5a75" font-size="9">${fmt(maxVal*i/4)}</text>`;
+  }
+  data.forEach((d,i)=>{
+    const x=pad.l+gap+(bw+gap)*i;
+    const base=bases[i], h=heights[i];
+    const barH=Math.max(0,(Math.abs(h)/maxVal)*ch);
+    const barBase=(base/maxVal)*ch;
+    const y=pad.t+ch-barBase-barH;
+    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${barH}" rx="2" fill="${d.color||'#0ea5e9'}" opacity="0.85"><title>${d.l}: ${fmt(h,1)} MNOK</title></rect>`;
+    svg+=`<text x="${x+bw/2}" y="${H-pad.b+14}" text-anchor="middle" fill="#7a8ba8" font-size="7" transform="rotate(-35 ${x+bw/2} ${H-pad.b+14})">${d.l}</text>`;
+    if(Math.abs(h)>0.5) svg+=`<text x="${x+bw/2}" y="${y-3}" text-anchor="middle" fill="#e2e8f0" font-size="7" font-weight="700">${h>0?'+':''}${fmt(h,1)}</text>`;
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+function svgLine(series,labels,opts={}){
+  const W=opts.w||400, H=opts.h||160, pad={t:15,r:15,b:30,l:45};
+  const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  let allVals=[]; series.forEach(s=>allVals=allVals.concat(s.data));
+  const minV=opts.min!=null?opts.min:Math.min(...allVals)*.9;
+  const maxV=Math.max(...allVals)*1.1;
+  const n=labels.length;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  for(let i=0;i<=3;i++){
+    const y=pad.t+ch-ch*(i/3);
+    svg+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#243050" stroke-width="0.5"/>`;
+    svg+=`<text x="${pad.l-6}" y="${y+3}" text-anchor="end" fill="#4a5a75" font-size="8">${fmt(minV+(maxV-minV)*(i/3),0)}</text>`;
+  }
+  labels.forEach((l,i)=>{
+    const x=pad.l+(cw/(n-1))*i;
+    svg+=`<text x="${x}" y="${H-pad.b+14}" text-anchor="middle" fill="#7a8ba8" font-size="8">${l}</text>`;
+  });
+  series.forEach(s=>{
+    const pts=s.data.map((v,i)=>{
+      const x=pad.l+(cw/(n-1))*i;
+      const y=pad.t+ch-((v-minV)/(maxV-minV))*ch;
+      return `${x},${y}`;
+    });
+    svg+=`<polyline points="${pts.join(' ')}" fill="none" stroke="${s.color||'#0ea5e9'}" stroke-width="2" stroke-linejoin="round"/>`;
+    s.data.forEach((v,i)=>{
+      const x=pad.l+(cw/(n-1))*i;
+      const y=pad.t+ch-((v-minV)/(maxV-minV))*ch;
+      svg+=`<circle cx="${x}" cy="${y}" r="3" fill="${s.color||'#0ea5e9'}"><title>${s.label}: ${fmt(v,1)}</title></circle>`;
+    });
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+function svgRadar(axes,datasets,opts={}){
+  const W=opts.w||260, H=opts.h||240, cx=W/2, cy=H/2-5, R=Math.min(W,H)/2-30;
+  const n=axes.length, step=2*Math.PI/n;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
+  [0.25,0.5,0.75,1].forEach(r=>{
+    const pts=axes.map((_,i)=>{const a=-Math.PI/2+step*i;return`${cx+R*r*Math.cos(a)},${cy+R*r*Math.sin(a)}`;});
+    svg+=`<polygon points="${pts.join(' ')}" fill="none" stroke="#243050" stroke-width="0.5"/>`;
+  });
+  axes.forEach((a,i)=>{
+    const ang=-Math.PI/2+step*i;
+    const x2=cx+R*Math.cos(ang), y2=cy+R*Math.sin(ang);
+    svg+=`<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="#243050" stroke-width="0.5"/>`;
+    const lx=cx+(R+14)*Math.cos(ang), ly=cy+(R+14)*Math.sin(ang);
+    svg+=`<text x="${lx}" y="${ly+3}" text-anchor="middle" fill="#7a8ba8" font-size="7">${a}</text>`;
+  });
+  datasets.forEach(ds=>{
+    const pts=ds.data.map((v,i)=>{const a=-Math.PI/2+step*i;const r=R*(v/100);return`${cx+r*Math.cos(a)},${cy+r*Math.sin(a)}`;});
+    svg+=`<polygon points="${pts.join(' ')}" fill="${ds.color||'#0ea5e9'}" fill-opacity="0.15" stroke="${ds.color||'#0ea5e9'}" stroke-width="1.5"/>`;
+  });
+  svg+='</svg>';
+  return svg;
+}
+
+// ═══════════════════ MAP SVG ═══════════════════
+function buildMapSVG(highlights={}){
+  const W=700, H=650;
+  function proj(lon,lat){ return [((lon+15)/50)*W, ((72-lat)/28)*H]; }
+  // Simplified country paths (key vertices)
+  const countries=[
+    {name:'Norway',color:'#1a3350',pts:[[5,58],[4.5,59],[5.3,60.4],[5,61.5],[5.5,62],[6.2,62.5],[7,63],[10,63.4],[11,64.5],[13,66],[14.5,67.5],[15.5,68.5],[17,69],[19,69.6],[22,70],[25,70.5],[28,71],[30,70.2],[30,69],[29,68],[27,67],[20,66],[16,65],[14,64],[12.5,63],[12,62],[12,61],[12,60],[11.5,59.5],[11,59],[10,58.5],[8,58],[6,57.9]]},
+    {name:'Sweden',color:'#152840',pts:[[12,58.5],[11,59],[11.5,59.5],[12,60.5],[12,61],[12,62],[12.5,63],[14,64],[16,65],[20,66],[21,66.5],[22,67],[20,68],[18.5,68.5],[18,69],[19,69.6],[20,69.2],[22,68.5],[24,67.5],[24,66],[23,65],[21,64],[19.5,63],[18.5,62],[18,61],[18.3,60],[17.5,59],[16,58.5],[14.5,58],[14,57.5],[13,56],[12.5,55.5],[13,55.3],[14,56],[14.5,56.5],[15,57],[15.5,57.5],[16,58.5]]},
+    {name:'Denmark',color:'#152840',pts:[[8.5,57.1],[8.2,56.5],[8.1,55.5],[8.6,55],[9,55.3],[9.5,55],[9.8,55.5],[10.2,56],[10,56.5],[9.5,57],[8.8,57.2]]},
+    {name:'DK_Zealand',color:'#152840',pts:[[11.5,56],[11.2,55.5],[11.8,55.2],[12.5,55.7],[12.6,56],[12,56.2]]},
+    {name:'UK_Scotland',color:'#0f1e30',pts:[[-5.5,56.5],[-5,57.5],[-3,58.5],[-2,58],[-1.5,57.5],[-3,56],[-4,55.8],[-5,56],[-5.8,56.3]]},
+    {name:'UK_England',color:'#0f1e30',pts:[[-5,55.8],[-3,55.5],[-2.5,55],[0,55.5],[1,54.5],[1.5,53],[1,52],[0,51.5],[-1,50.5],[-3,50.2],[-5,51],[-5.2,52],[-4,52.8],[-3,53.5],[-3.5,54.5],[-4.5,55],[-5,55.5]]}
+  ];
+  let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="background:#080d18;border-radius:10px">`;
+  // Sea grid
+  for(let lat=50;lat<=70;lat+=5){ const [,y]=proj(0,lat); svg+=`<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#0f1928" stroke-width="0.5"/>`; }
+  for(let lon=-10;lon<=30;lon+=5){ const [x]=proj(lon,60); svg+=`<line x1="${x}" y1="0" x2="${x}" y2="${H}" stroke="#0f1928" stroke-width="0.5"/>`; }
+  // Countries
+  countries.forEach(c=>{
+    const pts=c.pts.map(p=>proj(p[0],p[1]).join(',')).join(' ');
+    svg+=`<polygon points="${pts}" fill="${c.color}" stroke="#243050" stroke-width="0.8"/>`;
+  });
+  // Labels
+  const labels=[{t:'NORGE',p:[8,63]},{t:'SVERIGE',p:[16,62]},{t:'DANMARK',p:[10,55.8]},{t:'UK',p:[-2,54]}];
+  labels.forEach(l=>{const[x,y]=proj(l.p[0],l.p[1]);svg+=`<text x="${x}" y="${y}" text-anchor="middle" fill="#3a4a65" font-size="10" font-weight="700" letter-spacing="3">${l.t}</text>`;});
+  // Portfolio companies
+  D.companies.forEach(c=>{
+    const[x,y]=proj(c.lon,c.lat);
+    const selected=highlights.selected===c.id;
+    svg+=`<circle cx="${x}" cy="${y}" r="${selected?8:5}" fill="#0ea5e9" stroke="#0a0f1a" stroke-width="1.5" opacity="${selected?1:.8}" style="cursor:pointer" onclick="openDetail('${c.id}')"><title>${c.brand}: ${latestRev(c)} MNOK</title></circle>`;
+    if(selected||latestRev(c)>50) svg+=`<text x="${x+8}" y="${y+3}" fill="#7a8ba8" font-size="8">${c.brand}</text>`;
+  });
+  // M&A targets
+  if(highlights.showMA){
+    D.maTargets.forEach(t=>{
+      const[x,y]=proj(t.lon,t.lat);
+      const col=t.rec==='Prioritize'?'#10b981':t.rec==='Engage'?'#f59e0b':'#4a5a75';
+      svg+=`<rect x="${x-4}" y="${y-4}" width="8" height="8" rx="2" fill="${col}" stroke="#0a0f1a" stroke-width="1" opacity="0.8" style="cursor:pointer" onclick="selectMA('${t.id}')"><title>${t.name} (${t.country}) - ${t.rec}</title></rect>`;
+    });
+  }
+  svg+='</svg>';
+  return svg;
+}
+
+// ═══════════════════ NAVIGATION STATE ═══════════════════
+let state={app:'app1',view1:'overview',view2:'mapma',scenario:{util:0,price:0,winrate:0,crossSell:0,procure:0,shared:0,support:0}};
+
+function switchApp(app,btn){
+  document.querySelectorAll('.app-container').forEach(e=>e.classList.remove('active'));
+  document.getElementById(app).classList.add('active');
+  document.querySelectorAll('.nav-tab').forEach(e=>e.classList.remove('active'));
+  btn.classList.add('active');
+  state.app=app;
+  if(app==='app1') renderView1(); else renderView2();
+}
+function showView1(v,btn){
+  state.view1=v;
+  document.querySelectorAll('#sidebar1 .side-item').forEach(e=>e.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderView1();
+}
+function showView2(v,btn){
+  state.view2=v;
+  document.querySelectorAll('#sidebar2 .side-item').forEach(e=>e.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  renderView2();
+}
+
+// ═══════════════════ APP 1 RENDER ═══════════════════
+function renderView1(){
+  const mc=document.getElementById('mc1');
+  switch(state.view1){
+    case 'overview': mc.innerHTML=renderOverview(); break;
+    case 'heatmap': mc.innerHTML=renderHeatmap(); break;
+    case 'value': mc.innerHTML=renderValueCreation(); break;
+    case 'cadence': mc.innerHTML=renderCadence(); break;
+    case 'tracker': mc.innerHTML=renderTracker(); break;
+    case 'safety': mc.innerHTML=renderSafety(); break;
+    case 'scenario': mc.innerHTML=renderScenario(); break;
+  }
+}
+
+function renderOverview(){
+  const totRev=sumLatestRev(), totEbitda=sumLatestEbitda(), totMargin=(totEbitda/totRev*100);
+  const avgUtil=D.companies.reduce((s,c)=>s+c.kpis.util,0)/D.companies.length;
+  const avgHit=D.companies.reduce((s,c)=>s+c.kpis.hit,0)/D.companies.length;
+  const avgLtif=D.companies.reduce((s,c)=>s+c.kpis.ltif,0)/D.companies.length;
+  const scaleN=D.companies.filter(c=>c.status==='Scale').length;
+  const improveN=D.companies.filter(c=>c.status==='Improve').length;
+  const fixN=D.companies.filter(c=>c.status==='Fix').length;
+  const totBacklog=D.companies.reduce((s,c)=>s+c.kpis.backlog,0);
+
+  let h=`<div class="section-title">Executive Summary <span class="badge">${D.companies.length} selskaper</span></div>`;
+  h+=`<div class="kpi-row">
+    <div class="kpi-card"><div class="kl">Omsetning</div><div class="kv">${fmt(totRev)}</div><div class="ksub">MNOK (2024)</div><div class="kpi-bar-bottom" style="width:100%;background:var(--accent)"></div></div>
+    <div class="kpi-card"><div class="kl">EBITDA</div><div class="kv">${fmt(totEbitda,1)}</div><div class="ksub">MNOK</div><div class="kpi-bar-bottom" style="width:${totEbitda/totRev*100*5}%;background:var(--green)"></div></div>
+    <div class="kpi-card"><div class="kl">EBITDA-margin</div><div class="kv">${pct(totMargin)}</div><div class="ksub">Vektet snitt</div></div>
+    <div class="kpi-card"><div class="kl">Ansatte</div><div class="kv">${D.platform.totalEmp}</div><div class="ksub">180+ per nettside</div></div>
+    <div class="kpi-card"><div class="kl">Utnyttelse (snitt)</div><div class="kv">${pct(avgUtil)}</div><div class="ksub">Kapasitetsgrad</div><div class="kpi-bar-bottom" style="width:${avgUtil}%;background:var(--amber)"></div></div>
+    <div class="kpi-card"><div class="kl">Hit Rate (snitt)</div><div class="kv">${pct(avgHit)}</div><div class="ksub">Tilbudsandel</div></div>
+    <div class="kpi-card"><div class="kl">LTIF (snitt)</div><div class="kv">${avgLtif.toFixed(1)}</div><div class="ksub">Sikkerhetsindikator</div></div>
+    <div class="kpi-card"><div class="kl">Backlog (sum)</div><div class="kv">${fmt(totBacklog)}</div><div class="ksub">MNOK</div></div>
+  </div>`;
+
+  // Scale/Improve/Fix summary
+  h+=`<div class="grid-3">
+    <div class="card" style="border-left:3px solid var(--green)"><div class="kl mb-8">SCALE</div><div class="kv text-green">${scaleN}</div><div class="fs-xs text-muted mt-8">${D.companies.filter(c=>c.status==='Scale').map(c=>c.brand).join(', ')}</div></div>
+    <div class="card" style="border-left:3px solid var(--amber)"><div class="kl mb-8">IMPROVE</div><div class="kv text-amber">${improveN}</div><div class="fs-xs text-muted mt-8">${D.companies.filter(c=>c.status==='Improve').map(c=>c.brand).join(', ')}</div></div>
+    <div class="card" style="border-left:3px solid var(--red)"><div class="kl mb-8">FIX</div><div class="kv text-red">${fixN}</div><div class="fs-xs text-muted mt-8">${D.companies.filter(c=>c.status==='Fix').map(c=>c.brand).join(', ')}</div></div>
+  </div>`;
+
+  // Revenue chart
+  h+=`<div class="card"><div class="card-header"><h3>Omsetning etter selskap (2024, MNOK)</h3><button class="export-btn" onclick="exportCSV('revenue')">↓ CSV</button></div>`;
+  const barData=D.companies.sort((a,b)=>latestRev(b)-latestRev(a)).map(c=>({l:c.brand,v:latestRev(c),color:c.status==='Scale'?'#0ea5e9':c.status==='Improve'?'#f59e0b':'#ef4444'}));
+  h+=`<div class="chart-wrap">${svgBar(barData,{w:750,h:220})}</div></div>`;
+
+  // Platform revenue trend
+  h+=`<div class="card"><div class="card-header"><h3>Plattform — omsetning og EBITDA utvikling</h3></div>`;
+  const years=D.companies[0].fin.years;
+  const totRevByYear=years.map((_,i)=>D.companies.reduce((s,c)=>s+c.fin.rev[i],0));
+  const totEbitdaByYear=years.map((_,i)=>D.companies.reduce((s,c)=>s+c.fin.ebitda[i],0));
+  h+=`<div class="chart-wrap">${svgLine([{label:'Omsetning',data:totRevByYear,color:'#0ea5e9'},{label:'EBITDA',data:totEbitdaByYear,color:'#10b981'}],years.map(String),{w:700,h:180,min:0})}</div></div>`;
+
+  return h;
+}
+
+function renderHeatmap(){
+  let h=`<div class="section-title">Portefølje Heatmap <span class="badge">KPI-matrise</span></div>`;
+  h+=`<div class="card" style="overflow-x:auto"><table class="hm-table"><thead><tr>
+    <th>Selskap</th><th>Data</th><th>Rev 24</th><th>EBITDA</th><th>Margin</th><th>Vekst</th><th>Utnyttelse</th><th>Hit Rate</th><th>Backlog</th><th>LTIF</th><th>Kvalitet</th><th>Turnover</th><th>Status</th>
+  </tr></thead><tbody>`;
+  D.companies.sort((a,b)=>latestRev(b)-latestRev(a)).forEach(c=>{
+    const rev=latestRev(c), ebitda=latestEbitda(c), m=latestMargin(c);
+    const growth=c.fin.rev.length>=2?((c.fin.rev[c.fin.rev.length-1]/c.fin.rev[c.fin.rev.length-2]-1)*100):0;
+    h+=`<tr onclick="openDetail('${c.id}')">
+      <td style="font-weight:600">${c.brand}</td>
+      <td>${confDot(c.conf)}</td>
+      <td><span class="hm-cell" style="background:${heatColor(rev,10,180)}22;color:${heatColor(rev,10,180)}">${fmt(rev)}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(ebitda,0.5,16)}22;color:${heatColor(ebitda,0.5,16)}">${fmt(ebitda,1)}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(m,3,10)}22;color:${heatColor(m,3,10)}">${pct(m)}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(growth,0,20)}22;color:${heatColor(growth,0,20)}">${growth.toFixed(0)}%</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.util,50,80)}22;color:${heatColor(c.kpis.util,50,80)}">${c.kpis.util}%</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.hit,18,40)}22;color:${heatColor(c.kpis.hit,18,40)}">${c.kpis.hit}%</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.backlog,15,100)}22;color:${heatColor(c.kpis.backlog,15,100)}">${c.kpis.backlog}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.ltif,0.5,3.5,true)}22;color:${heatColor(c.kpis.ltif,0.5,3.5,true)}">${c.kpis.ltif}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.quality,60,92)}22;color:${heatColor(c.kpis.quality,60,92)}">${c.kpis.quality}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.turnover,5,15,true)}22;color:${heatColor(c.kpis.turnover,5,15,true)}">${c.kpis.turnover}%</span></td>
+      <td>${statusTag(c.status)}</td>
+    </tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  h+=`<div class="fs-xs text-dim mt-8">Klikk på et selskap for deep-dive. Farger: <span class="text-green">grønn</span> = sterk, <span class="text-amber">gul</span> = middels, <span class="text-red">rød</span> = svak. ${confDot('Observed')}Observert ${confDot('Estimated')}Estimert ${confDot('Inferred')}Antatt</div>`;
+  return h;
+}
+
+function renderValueCreation(){
+  const totRev=sumLatestRev(), totEbitda=sumLatestEbitda();
+  // Levers
+  const utilLift=D.companies.reduce((s,c)=>s+Math.max(0,(75-c.kpis.util)/100)*latestRev(c)*0.55,0);
+  const priceLift=totRev*0.02*0.85;
+  const hitLift=totRev*0.05*0.12;
+  const qualityLift=totRev*0.015;
+  const crossSell=15*0.15;
+  const procure=4;
+  const sharedCap=3;
+  const support=2;
+  const totalLift=utilLift+priceLift+hitLift+qualityLift+crossSell+procure+sharedCap+support;
+
+  let h=`<div class="section-title">Verdiskapingsmodell — EBITDA-bro</div>`;
+  h+=`<div class="kpi-row">
+    <div class="kpi-card"><div class="kl">Basis EBITDA</div><div class="kv">${fmt(totEbitda,1)}</div><div class="ksub">MNOK 2024</div></div>
+    <div class="kpi-card"><div class="kl">Estimert løft</div><div class="kv text-green">+${fmt(totalLift,1)}</div><div class="ksub">MNOK potensial</div></div>
+    <div class="kpi-card"><div class="kl">Mål EBITDA</div><div class="kv text-accent">${fmt(totEbitda+totalLift,1)}</div><div class="ksub">MNOK</div></div>
+    <div class="kpi-card"><div class="kl">Mål margin</div><div class="kv text-accent">${pct((totEbitda+totalLift)/totRev*100)}</div><div class="ksub">vs ${pct(totEbitda/totRev*100)} i dag</div></div>
+  </div>`;
+
+  // Waterfall
+  const wfData=[
+    {l:'Basis',v:totEbitda,color:'#1a2942'},
+    {l:'Utnyttelse',v:utilLift,color:'#0ea5e9'},
+    {l:'Pris +2pp',v:priceLift,color:'#0ea5e9'},
+    {l:'Hit rate +5pp',v:hitLift,color:'#10b981'},
+    {l:'Kvalitets-gevinst',v:qualityLift,color:'#10b981'},
+    {l:'Kryss-salg',v:crossSell,color:'#f59e0b'},
+    {l:'Innkjøp',v:procure,color:'#f59e0b'},
+    {l:'Delt kapasitet',v:sharedCap,color:'#f59e0b'},
+    {l:'Støttefunksjoner',v:support,color:'#f59e0b'},
+    {l:'MÅL',v:totEbitda+totalLift,color:'#0891b2'}
+  ];
+  h+=`<div class="card"><div class="card-header"><h3>EBITDA-bro: Basis → Mål</h3><span class="badge">+${fmt(totalLift,0)} MNOK</span></div>`;
+  h+=`<div class="chart-wrap">${svgWaterfall(wfData,{w:750,h:240})}</div></div>`;
+
+  // Lever table
+  h+=`<div class="card"><div class="card-header"><h3>Verdiskapingslevers — detalj</h3></div>`;
+  const levers=[
+    {name:'+5-10pp utnyttelse', cat:'Operasjonelt', effect:utilLift, basis:'Snitt utnyttelse '+pct(D.companies.reduce((s,c)=>s+c.kpis.util,0)/D.companies.length)+' → 70-75%', complex:'Medium'},
+    {name:'+2pp gjennomsnittspris', cat:'Kommersielt', effect:priceLift, basis:'Effekt rett til bunnlinje (85% fall-through)', complex:'Lav'},
+    {name:'+5pp hit rate', cat:'Kommersielt', effect:hitLift, basis:'Bedre anbudsseleksjon og kvalifisering', complex:'Medium'},
+    {name:'Lavere prosjektavvik', cat:'Operasjonelt', effect:qualityLift, basis:'Redusert kostnadsoverskridelse fra ~20% til <10%', complex:'Høy'},
+    {name:'Kryss-salg mellom selskaper', cat:'Synergi', effect:crossSell, basis:'15 MNOK ny omsetning, 15% margin', complex:'Medium'},
+    {name:'Felles innkjøp', cat:'Synergi', effect:procure, basis:'5-8% besparelse på utstyr og forbruk', complex:'Lav'},
+    {name:'Delt kapasitet/ressurser', cat:'Synergi', effect:sharedCap, basis:'Redusert ekstern leie, bedre utstyrsutnyttelse', complex:'Medium'},
+    {name:'Felles støttefunksjoner', cat:'Synergi', effect:support, basis:'Admin, regnskap, HR, IT-konsolidering', complex:'Høy'},
+  ];
+  h+=`<table class="hm-table"><thead><tr><th>Lever</th><th>Kategori</th><th>EBITDA-effekt</th><th>Basis for estimat</th><th>Kompleksitet</th></tr></thead><tbody>`;
+  levers.sort((a,b)=>b.effect-a.effect).forEach(l=>{
+    const catCol=l.cat==='Operasjonelt'?'var(--accent)':l.cat==='Kommersielt'?'var(--green)':'var(--amber)';
+    h+=`<tr><td style="font-weight:600">${l.name}</td><td><span class="hm-cell" style="background:${catCol}22;color:${catCol}">${l.cat}</span></td><td class="fw-800 text-green">+${fmt(l.effect,1)} MNOK</td><td class="text-muted fs-xs">${l.basis}</td><td class="text-muted">${l.complex}</td></tr>`;
+  });
+  h+=`</tbody></table></div>`;
+
+  // Sensitivity
+  h+=`<div class="card"><div class="card-header"><h3>Sensitivitetsanalyse: hva driver mest?</h3></div>`;
+  h+=`<div class="fs-xs text-muted mb-8">Effekt per prosentpoeng endring i porteføljen</div>`;
+  const sens=[
+    {name:'+1pp utnyttelse',effect:(utilLift/10).toFixed(1)},
+    {name:'+1pp pris',effect:(priceLift/2).toFixed(1)},
+    {name:'+1pp hit rate',effect:(hitLift/5).toFixed(1)},
+    {name:'-10% prosjektavvik',effect:(qualityLift).toFixed(1)},
+  ];
+  sens.forEach(s=>{
+    h+=`<div class="score-bar"><div class="sbl">${s.name}</div><div class="sb-track"><div class="sb-fill" style="width:${Math.min(100,(s.effect/5)*100)}%;background:var(--accent)"></div></div><div class="sb-val text-accent">${s.effect}M</div></div>`;
+  });
+  h+=`</div>`;
+  return h;
+}
+
+function renderCadence(){
+  let h=`<div class="section-title">CEO Operating Cadence</div>`;
+  h+=`<div class="card"><div class="card-header"><h3>Styringssystem — oppfølgingsrytme</h3></div>`;
+  const cadence=[
+    {freq:'Månedlig',items:['KPI-review med hver CEO','Tiltaksstatus gjennomgang','Pipeline og backlog-oppdatering','HMS-gjennomgang'],color:'var(--accent)'},
+    {freq:'Kvartalsvis',items:['Strategireview per selskap','Budsjett vs actual deep-dive','Organisasjon og kapasitetsplanlegging','Synergirapport'],color:'var(--green)'},
+    {freq:'Halvårlig',items:['Porteføljestrategi-oppdatering','M&A pipeline-review','Verdiskapingsmodell rekalibrasjon','Styrepresentasjon'],color:'var(--amber)'},
+  ];
+  h+=`<div class="grid-3">`;
+  cadence.forEach(c=>{
+    h+=`<div style="border-left:3px solid ${c.color};padding-left:14px;"><div class="fw-800 mb-8" style="color:${c.color}">${c.freq}</div>`;
+    c.items.forEach(i=>{ h+=`<div class="tracker-row" style="border:none;padding:3px 0"><span class="status-dot" style="background:${c.color}"></span><span class="fs-xs">${i}</span></div>`; });
+    h+=`</div>`;
+  });
+  h+=`</div></div>`;
+
+  // Company status matrix
+  h+=`<div class="card"><div class="card-header"><h3>CEO Monthly Review Status</h3></div>`;
+  h+=`<table class="hm-table"><thead><tr><th>Selskap</th><th>CEO</th><th>Siste review</th><th>Resultat</th><th>Tiltak</th><th>HMS</th><th>Backlog</th><th>Overall</th></tr></thead><tbody>`;
+  D.companies.forEach(c=>{
+    const overall=c.status==='Scale'?'green':c.status==='Improve'?'amber':'red';
+    const finSt=latestMargin(c)>8?'green':latestMargin(c)>5?'amber':'red';
+    const hmsSt=c.kpis.ltif<2?'green':c.kpis.ltif<3?'amber':'red';
+    const bkSt=c.kpis.backlog>50?'green':c.kpis.backlog>25?'amber':'red';
+    h+=`<tr onclick="openDetail('${c.id}')"><td class="fw-800">${c.brand}</td><td class="text-muted">${c.ceo}</td><td class="text-muted">Mar 2026</td>
+      <td><span class="status-dot ${finSt}"></span></td><td><span class="status-dot amber"></span></td>
+      <td><span class="status-dot ${hmsSt}"></span></td><td><span class="status-dot ${bkSt}"></span></td>
+      <td><span class="status-dot ${overall}"></span></td></tr>`;
+  });
+  h+=`</tbody></table></div>`;
+  return h;
+}
+
+function renderTracker(){
+  let h=`<div class="section-title">100-dagers tiltakssporing <span class="badge">${D.initiatives.length} tiltak</span></div>`;
+  // Filters
+  h+=`<div class="flex gap-8 mb-16">`;
+  const cats=[...new Set(D.initiatives.map(i=>i.cat))];
+  h+=`<button class="btn-sm primary" onclick="filterInit('all')">Alle</button>`;
+  cats.forEach(c=>{ h+=`<button class="btn-sm" onclick="filterInit('${c}')">${c}</button>`; });
+  h+=`</div>`;
+  h+=`<div class="card" id="trackerList">`;
+  h+=renderInitList(D.initiatives);
+  h+=`</div>`;
+  return h;
+}
+function renderInitList(inits){
+  let h=`<table class="hm-table"><thead><tr><th>#</th><th>Tiltak</th><th>Kategori</th><th>Selskap</th><th>Effekt</th><th>Tid</th><th>Eier</th><th>Status</th><th>Fremdrift</th></tr></thead><tbody>`;
+  inits.forEach(i=>{
+    h+=`<tr><td class="fw-800">${i.id}</td><td>${i.title}</td>
+      <td><span class="hm-cell" style="background:var(--accent-dim);color:var(--accent)">${i.cat}</span></td>
+      <td class="text-muted">${i.company}</td><td class="fw-800 text-green">${i.effect}</td><td class="text-muted">${i.time}</td><td class="text-muted">${i.owner}</td>
+      <td><span class="status-dot ${i.status}"></span></td>
+      <td><div class="progress-bar"><div class="progress-fill" style="width:${i.progress*100}%;background:${i.status==='green'?'var(--green)':i.status==='amber'?'var(--amber)':'var(--red)'}"></div></div></td></tr>`;
+  });
+  h+=`</tbody></table>`;
+  return h;
+}
+function filterInit(cat){
+  const filtered=cat==='all'?D.initiatives:D.initiatives.filter(i=>i.cat===cat);
+  document.getElementById('trackerList').innerHTML=renderInitList(filtered);
+}
+
+function renderSafety(){
+  let h=`<div class="section-title">HMS, Sikkerhet & Kultur</div>`;
+  h+=`<div class="kpi-row">`;
+  const avgLtif=D.companies.reduce((s,c)=>s+c.kpis.ltif,0)/D.companies.length;
+  const avgSick=D.companies.reduce((s,c)=>s+c.kpis.sick,0)/D.companies.length;
+  const avgQuality=D.companies.reduce((s,c)=>s+c.kpis.quality,0)/D.companies.length;
+  h+=`<div class="kpi-card"><div class="kl">LTIF (snitt)</div><div class="kv" style="color:${avgLtif<2?'var(--green)':'var(--amber)'}">${avgLtif.toFixed(1)}</div><div class="ksub">Lost Time Injury Freq.</div></div>`;
+  h+=`<div class="kpi-card"><div class="kl">Sykefravær (snitt)</div><div class="kv" style="color:${avgSick<4?'var(--green)':'var(--amber)'}">${avgSick.toFixed(1)}%</div></div>`;
+  h+=`<div class="kpi-card"><div class="kl">Kvalitetsscore (snitt)</div><div class="kv" style="color:${avgQuality>75?'var(--green)':'var(--amber)'}">${avgQuality.toFixed(0)}</div><div class="ksub">av 100</div></div>`;
+  h+=`</div>`;
+
+  // Safety heatmap
+  h+=`<div class="card"><div class="card-header"><h3>HMS-profil per selskap</h3></div>`;
+  h+=`<table class="hm-table"><thead><tr><th>Selskap</th><th>LTIF</th><th>Sykefravær</th><th>Kvalitet</th><th>On Time</th><th>On Budget</th><th>Turnover</th><th>Modenhet</th></tr></thead><tbody>`;
+  D.companies.forEach(c=>{
+    const maturity=c.kpis.ltif<2&&c.kpis.quality>80?'Moden':c.kpis.ltif<3&&c.kpis.quality>70?'Sårbar':'Umodent';
+    const matCol=maturity==='Moden'?'var(--green)':maturity==='Sårbar'?'var(--amber)':'var(--red)';
+    h+=`<tr onclick="openDetail('${c.id}')"><td class="fw-800">${c.brand}</td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.ltif,0.5,3.5,true)}22;color:${heatColor(c.kpis.ltif,0.5,3.5,true)}">${c.kpis.ltif}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.sick,2,6,true)}22;color:${heatColor(c.kpis.sick,2,6,true)}">${c.kpis.sick}%</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.quality,60,92)}22;color:${heatColor(c.kpis.quality,60,92)}">${c.kpis.quality}</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.onTime,65,92)}22;color:${heatColor(c.kpis.onTime,65,92)}">${c.kpis.onTime}%</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.onBudget,60,90)}22;color:${heatColor(c.kpis.onBudget,60,90)}">${c.kpis.onBudget}%</span></td>
+      <td><span class="hm-cell" style="background:${heatColor(c.kpis.turnover,5,15,true)}22;color:${heatColor(c.kpis.turnover,5,15,true)}">${c.kpis.turnover}%</span></td>
+      <td style="color:${matCol};font-weight:700">${maturity}</td></tr>`;
+  });
+  h+=`</tbody></table></div>`;
+
+  // Safety vs Quality correlation
+  h+=`<div class="card"><div class="card-header"><h3>Sammenheng: sikkerhet × prosjektkvalitet</h3></div>`;
+  h+=`<div class="fs-xs text-muted mb-8">Selskaper med bedre sikkerhet (lavere LTIF) leverer konsistent høyere prosjektkvalitet.</div>`;
+  D.companies.sort((a,b)=>a.kpis.ltif-b.kpis.ltif).forEach(c=>{
+    h+=`<div class="score-bar"><div class="sbl">${c.brand}</div><div class="sb-track"><div class="sb-fill" style="width:${c.kpis.quality}%;background:${c.kpis.ltif<2?'var(--green)':c.kpis.ltif<3?'var(--amber)':'var(--red)'}"></div></div><div class="sb-val">${c.kpis.quality}</div></div>`;
+  });
+  h+=`<div class="fs-xs text-dim mt-8">LTIF ↓ = barfarge grønn. Kvalitetsscore 0-100 på x-aksen.</div></div>`;
+  return h;
+}
+
+function renderScenario(){
+  let h=`<div class="section-title">Scenariomodell — interaktiv</div>`;
+  h+=`<div class="grid-2"><div>`;
+
+  // Levers
+  h+=`<div class="card"><h3 class="mb-16">Juster parametere</h3>`;
+  const levers=[
+    {id:'sc_util',label:'Utnyttelsesløft (pp)',min:0,max:15,val:0,step:1},
+    {id:'sc_price',label:'Prisøkning (%)',min:0,max:5,val:0,step:0.5},
+    {id:'sc_hit',label:'Hit rate-forbedring (pp)',min:0,max:10,val:0,step:1},
+    {id:'sc_cross',label:'Kryss-salg realisering (%)',min:0,max:100,val:0,step:10},
+    {id:'sc_procure',label:'Innkjøpsbesparelse (%)',min:0,max:100,val:0,step:10},
+    {id:'sc_activity',label:'Aktivitetsendring (%)',min:-20,max:30,val:0,step:5},
+  ];
+  levers.forEach(l=>{
+    h+=`<div class="lever-item"><div class="lever-label"><span>${l.label}</span><span class="lval" id="${l.id}_val">${l.val}${l.id==='sc_price'?'%':l.id.includes('cross')||l.id.includes('procure')||l.id.includes('activity')?'%':'pp'}</span></div>
+    <input type="range" id="${l.id}" min="${l.min}" max="${l.max}" value="${l.val}" step="${l.step}" oninput="updateScenario()">
+    <div class="lever-impact" id="${l.id}_imp"></div></div>`;
+  });
+  h+=`<button class="btn-sm mt-8" onclick="resetScenario()">↺ Nullstill</button></div>`;
+
+  // Scenario toggles
+  h+=`<div class="card"><h3 class="mb-16">Forhåndsdefinerte scenarioer</h3>
+    <button class="btn-sm mb-8" onclick="applyPreset('base')" style="width:100%">📊 Basis (ingen endring)</button>
+    <button class="btn-sm mb-8" onclick="applyPreset('quick')" style="width:100%">⚡ Quick Wins (100 dager)</button>
+    <button class="btn-sm mb-8" onclick="applyPreset('full')" style="width:100%">🚀 Full verdiskaping (12 mnd)</button>
+    <button class="btn-sm mb-8" onclick="applyPreset('bear')" style="width:100%">📉 Bear case (marginpress)</button>
+    <button class="btn-sm mb-8" onclick="applyPreset('acquisition')" style="width:100%">🏢 Etter oppkjøp i Trøndelag</button>
+  </div>`;
+
+  h+=`</div><div>`;
+  // Results
+  h+=`<div class="card" id="scenarioResults">${renderScenarioResults()}</div>`;
+  h+=`</div></div>`;
+  return h;
+}
+
+function renderScenarioResults(){
+  const totRev=sumLatestRev(), totEbitda=sumLatestEbitda();
+  const sl=id=>parseFloat(document.getElementById(id)?.value||0);
+  const utilPP=sl('sc_util'), price=sl('sc_price'), hitPP=sl('sc_hit');
+  const cross=sl('sc_cross'), procure=sl('sc_procure'), activity=sl('sc_activity');
+
+  const activityEffect=totRev*(activity/100);
+  const newRev=totRev+activityEffect;
+  const utilEffect=D.companies.reduce((s,c)=>s+Math.min(utilPP,(90-c.kpis.util))*latestRev(c)*0.006,0);
+  const priceEffect=newRev*(price/100)*0.85;
+  const hitEffect=newRev*(hitPP/100)*0.12;
+  const crossEffect=(cross/100)*15*0.15;
+  const procureEffect=(procure/100)*4;
+  const totalLift=utilEffect+priceEffect+hitEffect+crossEffect+procureEffect;
+  const newEbitda=totEbitda+totalLift;
+  const newMargin=(newEbitda/(newRev||1))*100;
+
+  let h=`<h3 class="mb-16">Scenarioresultat</h3>`;
+  h+=`<div class="kpi-row">
+    <div class="kpi-card"><div class="kl">Ny EBITDA</div><div class="kv text-accent">${fmt(newEbitda,1)}</div><div class="ksub">MNOK</div></div>
+    <div class="kpi-card"><div class="kl">Løft</div><div class="kv text-green">+${fmt(totalLift,1)}</div><div class="ksub">MNOK</div></div>
+    <div class="kpi-card"><div class="kl">Ny margin</div><div class="kv" style="color:${newMargin>10?'var(--green)':'var(--accent)'}">${pct(newMargin)}</div></div>
+  </div>`;
+  h+=`<div class="mb-8 fs-xs text-muted">EBITDA-bro</div>`;
+  const wfData=[
+    {l:'Basis',v:totEbitda,color:'#1a2942'},
+    {l:'Utnyttelse',v:utilEffect,color:'#0ea5e9'},
+    {l:'Pris',v:priceEffect,color:'#0ea5e9'},
+    {l:'Hit rate',v:hitEffect,color:'#10b981'},
+    {l:'Kryss-salg',v:crossEffect,color:'#f59e0b'},
+    {l:'Innkjøp',v:procureEffect,color:'#f59e0b'},
+    {l:'MÅL',v:newEbitda,color:'#0891b2'}
+  ];
+  h+=`<div class="chart-wrap">${svgWaterfall(wfData,{w:460,h:200})}</div>`;
+  // Confidence
+  const agg=totalLift/(totEbitda*0.8);
+  const conf=Math.max(20,95-agg*60);
+  h+=`<div class="mt-16"><div class="fs-xs text-muted mb-8">Realiserings-sannsynlighet</div>`;
+  h+=`<div class="score-bar"><div class="sbl">Samlet</div><div class="sb-track"><div class="sb-fill" style="width:${conf}%;background:${conf>70?'var(--green)':conf>45?'var(--amber)':'var(--red)'}"></div></div><div class="sb-val" style="color:${conf>70?'var(--green)':conf>45?'var(--amber)':'var(--red)'}">${conf.toFixed(0)}%</div></div></div>`;
+  return h;
+}
+
+function updateScenario(){
+  ['sc_util','sc_price','sc_hit','sc_cross','sc_procure','sc_activity'].forEach(id=>{
+    const el=document.getElementById(id);
+    const valEl=document.getElementById(id+'_val');
+    if(el&&valEl) valEl.textContent=el.value+(id==='sc_price'||id.includes('cross')||id.includes('procure')||id.includes('activity')?'%':'pp');
+  });
+  const r=document.getElementById('scenarioResults');
+  if(r) r.innerHTML=renderScenarioResults();
+}
+function resetScenario(){ ['sc_util','sc_price','sc_hit','sc_cross','sc_procure','sc_activity'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=id==='sc_activity'?0:0;}); updateScenario(); }
+function applyPreset(p){
+  const presets={
+    base:{sc_util:0,sc_price:0,sc_hit:0,sc_cross:0,sc_procure:0,sc_activity:0},
+    quick:{sc_util:3,sc_price:1,sc_hit:2,sc_cross:20,sc_procure:30,sc_activity:0},
+    full:{sc_util:8,sc_price:2,sc_hit:5,sc_cross:60,sc_procure:70,sc_activity:5},
+    bear:{sc_util:-2,sc_price:-1,sc_hit:-2,sc_cross:0,sc_procure:0,sc_activity:-10},
+    acquisition:{sc_util:5,sc_price:1.5,sc_hit:3,sc_cross:40,sc_procure:50,sc_activity:15},
+  };
+  const vals=presets[p]||presets.base;
+  Object.entries(vals).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v;});
+  updateScenario();
+}
+
+// ═══════════════════ APP 2 RENDER ═══════════════════
+function renderView2(){
+  const mc=document.getElementById('mc2');
+  switch(state.view2){
+    case 'mapma': mc.innerHTML=renderMapMA(); break;
+    case 'screening': mc.innerHTML=renderScreening(); break;
+    case 'markets': mc.innerHTML=renderMarkets(); break;
+    case 'adjacency': mc.innerHTML=renderAdjacency(); break;
+    case 'recommendations': mc.innerHTML=renderRecommendations(); break;
+  }
+}
+
+function renderMapMA(){
+  let h=`<div class="section-title">Nord-Europa — Kart & M&A Pipeline</div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 380px;gap:16px;">`;
+
+  // Map
+  h+=`<div class="map-container" style="position:relative">${buildMapSVG({showMA:true})}
+    <div class="map-legend">
+      <div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div>Eksisterende portefølje</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Prioritize</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>Engage</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--text-dim);border-radius:2px"></div>Track</div>
+    </div>
+  </div>`;
+
+  // M&A Pipeline
+  h+=`<div style="overflow-y:auto;max-height:620px">`;
+  h+=`<div class="card"><h3 class="mb-8">M&A Pipeline</h3><div class="fs-xs text-muted mb-16">${D.maTargets.length} identifiserte kandidater</div>`;
+  D.maTargets.sort((a,b)=>{const o={Prioritize:0,Engage:1,Track:2,Pass:3};return(o[a.rec]||9)-(o[b.rec]||9);}).forEach(t=>{
+    const recCol=t.rec==='Prioritize'?'var(--green)':t.rec==='Engage'?'var(--amber)':'var(--text-dim)';
+    const avgFit=Math.round((t.fit.strat+t.fit.comm+t.fit.ops+t.fit.geo)/4);
+    h+=`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:var(--transition)" onmouseenter="this.style.borderColor='var(--border-light)'" onmouseleave="this.style.borderColor='var(--border)'" onclick="selectMA('${t.id}')">
+      <div class="flex justify-between items-center"><span class="fw-800 fs-sm">${t.name}</span><span class="hm-cell" style="background:${recCol}22;color:${recCol}">${t.rec}</span></div>
+      <div class="flex gap-8 mt-8 fs-xs text-muted"><span>${t.country==='NO'?'🇳🇴':t.country==='SE'?'🇸🇪':t.country==='DK'?'🇩🇰':'🇬🇧'} ${t.loc}</span><span>~${t.estRev}M rev</span><span>Fit: ${avgFit}%</span></div>
+    </div>`;
+  });
+  h+=`</div></div></div>`;
+  return h;
+}
+
+function renderScreening(){
+  let h=`<div class="section-title">M&A Screening Engine</div>`;
+  h+=`<div class="grid-2"><div>`;
+  h+=`<div class="card"><h3 class="mb-16">Vektjustering</h3>`;
+  const weights=[
+    {id:'w_strat',label:'Strategisk fit',val:30},
+    {id:'w_comm',label:'Kommersiell fit',val:20},
+    {id:'w_ops',label:'Operasjonell fit',val:20},
+    {id:'w_geo',label:'Geografisk fit',val:20},
+    {id:'w_syn',label:'Synergipotensial',val:10},
+  ];
+  weights.forEach(w=>{
+    h+=`<div class="lever-item"><div class="lever-label"><span>${w.label}</span><span class="lval" id="${w.id}_val">${w.val}%</span></div>
+    <input type="range" id="${w.id}" min="0" max="50" value="${w.val}" step="5" oninput="updateScreening()"></div>`;
+  });
+  h+=`<button class="btn-sm mt-8" onclick="resetWeights()">↺ Standardvekter</button></div>`;
+  h+=`</div><div>`;
+  h+=`<div class="card" id="screeningResults">${renderScreeningResults()}</div>`;
+  h+=`</div></div>`;
+  return h;
+}
+function renderScreeningResults(){
+  const w={strat:parseFloat(document.getElementById('w_strat')?.value||30),comm:parseFloat(document.getElementById('w_comm')?.value||20),
+    ops:parseFloat(document.getElementById('w_ops')?.value||20),geo:parseFloat(document.getElementById('w_geo')?.value||20),syn:parseFloat(document.getElementById('w_syn')?.value||10)};
+  const totalW=w.strat+w.comm+w.ops+w.geo+w.syn||100;
+  const scored=D.maTargets.map(t=>{
+    const score=(t.fit.strat*(w.strat/totalW)+t.fit.comm*(w.comm/totalW)+t.fit.ops*(w.ops/totalW)+t.fit.geo*(w.geo/totalW)+t.synergy*(w.syn/totalW));
+    return {...t,score};
+  }).sort((a,b)=>b.score-a.score);
+
+  let h=`<h3 class="mb-8">Rangerte kandidater</h3><div class="fs-xs text-muted mb-16">Basert på vektet scoring</div>`;
+  scored.forEach((t,i)=>{
+    const col=t.score>75?'var(--green)':t.score>60?'var(--amber)':'var(--text-dim)';
+    h+=`<div class="tracker-row">
+      <span class="fw-800" style="width:20px;text-align:center">${i+1}</span>
+      <span style="flex:1;font-weight:600;font-size:12px">${t.name}</span>
+      <span class="fs-xs text-muted">${t.country}</span>
+      <div class="progress-bar"><div class="progress-fill" style="width:${t.score}%;background:${col}"></div></div>
+      <span class="fw-800 fs-sm" style="color:${col};min-width:35px;text-align:right">${t.score.toFixed(0)}</span>
+    </div>`;
+  });
+  return h;
+}
+function updateScreening(){
+  ['w_strat','w_comm','w_ops','w_geo','w_syn'].forEach(id=>{
+    const e=document.getElementById(id);const v=document.getElementById(id+'_val');
+    if(e&&v) v.textContent=e.value+'%';
+  });
+  const r=document.getElementById('screeningResults');if(r) r.innerHTML=renderScreeningResults();
+}
+function resetWeights(){
+  const vals={w_strat:30,w_comm:20,w_ops:20,w_geo:20,w_syn:10};
+  Object.entries(vals).forEach(([k,v])=>{const e=document.getElementById(k);if(e)e.value=v;});
+  updateScreening();
+}
+
+function renderMarkets(){
+  let h=`<div class="section-title">Markedsattraktivitet — per land og segment</div>`;
+  // Country cards
+  h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">`;
+  D.markets.forEach(m=>{
+    h+=`<div class="card" style="margin:0"><div class="flex items-center gap-8 mb-8"><span style="font-size:24px">${m.flag}</span><span class="fw-800">${m.country}</span></div>
+      <div class="fs-xs text-muted mb-8">Markedsstørrelse (proxy)</div><div class="fw-800 text-accent mb-8">${fmt(m.size)} MNOK</div>
+      <div class="score-bar"><div class="sbl">Vekst</div><div class="sb-track"><div class="sb-fill" style="width:${m.growth*8}%;background:var(--green)"></div></div><div class="sb-val">${m.growth}%</div></div>
+      <div class="score-bar"><div class="sbl">Fragmentering</div><div class="sb-track"><div class="sb-fill" style="width:${m.frag}%;background:var(--accent)"></div></div><div class="sb-val">${m.frag}</div></div>
+      <div class="score-bar"><div class="sbl">Relevans</div><div class="sb-track"><div class="sb-fill" style="width:${m.relevance}%;background:var(--amber)"></div></div><div class="sb-val">${m.relevance}</div></div>
+    </div>`;
+  });
+  h+=`</div>`;
+
+  // Segment detail per country
+  h+=`<div class="card"><div class="card-header"><h3>Segmenter per land</h3><button class="export-btn" onclick="exportCSV('markets')">↓ CSV</button></div>`;
+  h+=`<table class="hm-table"><thead><tr><th>Land</th><th>Segment</th><th>Størrelse (MNOK)</th><th>Vekst</th><th>Kommentar</th></tr></thead><tbody>`;
+  D.markets.forEach(m=>{
+    m.segments.forEach((s,i)=>{
+      h+=`<tr><td>${i===0?m.flag+' '+m.country:''}</td><td class="fw-800">${s.name}</td>
+        <td><span class="hm-cell" style="background:${heatColor(s.size,200,3000)}22;color:${heatColor(s.size,200,3000)}">${fmt(s.size)}</span></td>
+        <td><span class="hm-cell" style="background:${heatColor(s.growth,3,15)}22;color:${heatColor(s.growth,3,15)}">${s.growth}%</span></td>
+        <td class="text-muted fs-xs">${s.note}</td></tr>`;
+    });
+  });
+  h+=`</tbody></table></div>`;
+
+  // Market drivers
+  h+=`<div class="card"><div class="card-header"><h3>Nøkkeldrivere</h3></div>`;
+  const drivers=[
+    {name:'VA-vedlikeholdsetterslep',desc:'300+ mrd NOK over 20 år i Norge alene. Tilsvarende i Sverige.',icon:'💧',strength:95},
+    {name:'Offshore vind / elektrifisering',desc:'Massiv vekst i sjøkabler og undervannsinfrastruktur i Nordsjøen og Østersjøen.',icon:'⚡',strength:88},
+    {name:'Tunneler & kraftverk — inspeksjon',desc:'Stort etterslep på inspeksjon av vannkrafttunneler. NTI-teknologi er differensiator.',icon:'🔍',strength:82},
+    {name:'Regulering & sikkerhetskrav',desc:'Strengere krav til dokumentasjon, kvalitet og sikkerhet favoriserer profesjonelle aktører.',icon:'🛡️',strength:78},
+    {name:'Kommunal/offentlig infrastruktur',desc:'Havner, kaier, broer, daminfrastruktur — stort vedlikeholdsbehov.',icon:'🏗️',strength:75},
+    {name:'Digitalisering (survey, fotogrammetri)',desc:'ROV, multibeam, 3D-modellering. Økt etterspørsel etter digital dokumentasjon.',icon:'📡',strength:72},
+  ];
+  drivers.forEach(d=>{
+    h+=`<div class="tracker-row"><span style="font-size:18px">${d.icon}</span><div style="flex:1"><div class="fw-800 fs-sm">${d.name}</div><div class="fs-xs text-muted">${d.desc}</div></div>
+      <div class="progress-bar" style="max-width:80px"><div class="progress-fill" style="width:${d.strength}%;background:var(--accent)"></div></div></div>`;
+  });
+  h+=`</div>`;
+  return h;
+}
+
+function renderAdjacency(){
+  let h=`<div class="section-title">Adjacency / Opportunity Map</div>`;
+  h+=`<div class="adj-matrix">
+    <div class="adj-col core"><h4 style="color:var(--accent)">🎯 Core</h4><div class="fs-xs text-muted mb-8">Dagens kjernevirksomhet</div>
+      ${['Innaskjærs anleggsdykking','Vann & avløp (VA)','Kabellegging (sjø/innland)','Havne- og kai-arbeid','Skipsinspeksjon & hull cleaning','Undervannssprengning','Maritime konstruksjoner'].map(i=>`<div class="adj-item">${i}</div>`).join('')}
+    </div>
+    <div class="adj-col adjacent"><h4 style="color:var(--amber)">↗️ Adjacent</h4><div class="fs-xs text-muted mb-8">Nært tilknyttede muligheter</div>
+      ${['Tunnelinspeksjon (NTI / vannkraft)','Digital survey & dokumentasjon','ROV-basert inspeksjonstjenester','Bro- og daminspeksjon','Akvakultur-undervannstjenester','Miljøundersøkelser & overvåking','Fotogrammetri & 3D-modellering'].map(i=>`<div class="adj-item">${i}</div>`).join('')}
+    </div>
+    <div class="adj-col expand"><h4 style="color:var(--purple)">🚀 Expand</h4><div class="fs-xs text-muted mb-8">Nye vekstområder</div>
+      ${['Sverige – add-on dykkerselskaper','Danmark – kabel/offshore vind','UK – nisjeinnganger','Større hovudentrepriser','Inspeksjon-as-a-service (digital)','Offshore vind undervannsservice','Decommissioning-tjenester','Beredskap & akutt undervannstjeneste'].map(i=>`<div class="adj-item">${i}</div>`).join('')}
+    </div>
+  </div>`;
+
+  // Strategic growth paths
+  h+=`<div class="card mt-16"><h3 class="mb-16">Strategiske vekstpaths</h3>`;
+  const paths=[
+    {name:'Norge først',desc:'Konsolidere hvite flekker (Trøndelag, Nord-Norge). Organisk + 2-3 add-ons.',priority:'Høy',timeline:'0-18 mnd',color:'var(--green)'},
+    {name:'Nordics platform',desc:'Etter Norge: Sverige → Danmark. Bygge på VA og kabel.',priority:'Middels',timeline:'12-36 mnd',color:'var(--amber)'},
+    {name:'Survey/ROV-ledet vekst',desc:'Skalere Submara Survey + NTI. Digital differensiering.',priority:'Høy',timeline:'0-24 mnd',color:'var(--green)'},
+    {name:'VA-spesialisering',desc:'Bygge ledende nordisk VA-posisjon. Stor driver.',priority:'Høy',timeline:'0-24 mnd',color:'var(--green)'},
+    {name:'UK beachhead',desc:'Nisjeinntog via små oppkjøp. Offshore wind/decom.',priority:'Lav',timeline:'24-48 mnd',color:'var(--text-dim)'},
+  ];
+  paths.forEach(p=>{
+    h+=`<div class="tracker-row"><span class="status-dot" style="background:${p.color}"></span>
+      <div style="flex:1"><div class="fw-800 fs-sm">${p.name}</div><div class="fs-xs text-muted">${p.desc}</div></div>
+      <span class="hm-cell" style="background:${p.color}22;color:${p.color}">${p.priority}</span>
+      <span class="fs-xs text-muted" style="min-width:80px;text-align:right">${p.timeline}</span>
+    </div>`;
+  });
+  h+=`</div>`;
+  return h;
+}
+
+function renderRecommendations(){
+  let h=`<div class="section-title">Strategiske anbefalinger</div>`;
+
+  // Top M&A
+  h+=`<div class="card"><h3 class="mb-16">🏆 Topp 5 M&A-kandidater</h3>`;
+  const topMA=D.maTargets.sort((a,b)=>{
+    const sa=(a.fit.strat+a.fit.comm+a.fit.ops+a.fit.geo)/4+a.synergy;
+    const sb=(b.fit.strat+b.fit.comm+b.fit.ops+b.fit.geo)/4+b.synergy;
+    return sb-sa;
+  }).slice(0,5);
+  topMA.forEach((t,i)=>{
+    const avgFit=Math.round((t.fit.strat+t.fit.comm+t.fit.ops+t.fit.geo)/4);
+    h+=`<div class="tracker-row"><span class="fw-800 text-accent" style="width:24px">${i+1}</span>
+      <div style="flex:1"><div class="fw-800 fs-sm">${t.name}</div><div class="fs-xs text-muted">${t.country==='NO'?'🇳🇴':t.country==='SE'?'🇸🇪':t.country==='DK'?'🇩🇰':'🇬🇧'} ${t.loc} · ${t.segment} · ~${t.estRev}M</div></div>
+      <span class="hm-cell tag-scale">Fit: ${avgFit}%</span></div>`;
+  });
+  h+=`</div>`;
+
+  // Top market opportunities
+  h+=`<div class="card"><h3 class="mb-16">📈 Topp 5 markedsmuligheter</h3>`;
+  const topMkt=[
+    {name:'Vann & avløp — Norge',why:'300 mrd etterslep, Submara har sterk posisjon, vekst 8%/år',action:'Organisk + kapasitetsøkning'},
+    {name:'Tunnelinspeksjon — Norden',why:'NTI har unik teknologi (15km ROV). Enormt skandinavisk potensial',action:'Skalere NTI, patent/IP'},
+    {name:'Offshore vind kabel — DK/NO',why:'Massiv vekst i sjøkabler. Submara kabel-kompetanse er direkte overførbar',action:'M&A i Danmark/Esbjerg'},
+    {name:'Kommunal infrastruktur — Norge',why:'Havner, kaier, bro — stort vedlikeholdsetterslep nasjonalt',action:'Backlog-bygging, rammeavtaler'},
+    {name:'Digital survey — Norden',why:'Fotogrammetri, 3D, ROV-data som tjeneste. Vekst 12-15%/år',action:'Investere i Submara Survey'},
+  ];
+  topMkt.forEach((m,i)=>{
+    h+=`<div class="tracker-row"><span class="fw-800 text-green" style="width:24px">${i+1}</span>
+      <div style="flex:1"><div class="fw-800 fs-sm">${m.name}</div><div class="fs-xs text-muted">${m.why}</div></div>
+      <span class="fs-xs text-accent" style="min-width:150px;text-align:right">${m.action}</span></div>`;
+  });
+  h+=`</div>`;
+
+  // Geographic priority
+  h+=`<div class="card"><h3 class="mb-16">🗺️ Geografisk prioritering</h3>`;
+  const geoPri=[
+    {country:'🇳🇴 Norge',priority:'Konsolidere',score:95,note:'Hvite flekker: Trøndelag, Sørlandet. 2-3 add-ons.'},
+    {country:'🇸🇪 Sverige',priority:'Utforske',score:65,note:'Göteborg først. VA-markedet ligner Norge.'},
+    {country:'🇩🇰 Danmark',priority:'Utforske',score:60,note:'Kabel/offshore vind. Esbjerg hub.'},
+    {country:'🇬🇧 UK',priority:'Overvåke',score:35,note:'Komplekst, men stort marked. Langsiktig.'},
+  ];
+  geoPri.forEach(g=>{
+    h+=`<div class="score-bar"><div class="sbl">${g.country}</div><div class="sb-track"><div class="sb-fill" style="width:${g.score}%;background:${g.score>80?'var(--green)':g.score>50?'var(--amber)':'var(--text-dim)'}"></div></div><div class="sb-val">${g.score}</div></div>
+    <div class="fs-xs text-muted" style="margin-left:118px;margin-bottom:8px">${g.note}</div>`;
+  });
+  h+=`</div>`;
+
+  // Executive summary
+  h+=`<div class="card" style="border:1px solid var(--accent);background:rgba(14,165,233,.05)">
+    <h3 class="text-accent mb-16">💡 Oppsummering: Tre strategiske prioriteringer</h3>
+    <div class="grid-3">
+      <div><div class="fw-800 mb-8">1. Operasjonell verdiskaping</div><div class="fs-xs text-muted">Utnyttelse opp 5-10pp. Prisdisiplin. Standardisering. Quick wins i løpet av 100 dager. Estimert +15-25 MNOK EBITDA.</div></div>
+      <div><div class="fw-800 mb-8">2. Norsk konsolidering</div><div class="fs-xs text-muted">2-3 add-on oppkjøp (Trøndelag priority). Styrke geografisk dekning. Fyll hvite flekker. Realisere synergier.</div></div>
+      <div><div class="fw-800 mb-8">3. Plattformbygging</div><div class="fs-xs text-muted">Felles systemer, innkjøp, salg. Skalere Survey/NTI. Bygge grunnlaget for nordisk ekspansjon.</div></div>
+    </div>
+  </div>`;
+  return h;
+}
+
+// ═══════════════════ COMPANY DETAIL PANEL ═══════════════════
+function openDetail(id){
+  const c=D.companies.find(x=>x.id===id);
+  if(!c) return;
+  const p=document.getElementById('detailPanel');
+  const dc=document.getElementById('detailContent');
+  const m=latestMargin(c);
+  const growth=c.fin.rev.length>=2?((c.fin.rev[c.fin.rev.length-1]/c.fin.rev[c.fin.rev.length-2]-1)*100):0;
+
+  let h=`<h2 class="mb-8">${c.brand}</h2><div class="fs-xs text-muted mb-16">${c.name} · ${c.loc} · Est. ${c.founded} · ${c.emp} ansatte · ${confDot(c.conf)}${c.conf}</div>`;
+  h+=`<div class="flex gap-8 mb-16">${statusTag(c.status)}<span class="hm-cell" style="background:var(--accent-dim);color:var(--accent)">${c.segments.join(', ')}</span></div>`;
+
+  // KPIs
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px">
+    <div class="card" style="margin:0;padding:10px"><div class="kl">Revenue</div><div class="kv" style="font-size:18px">${fmt(latestRev(c))}</div><div class="ksub">MNOK 2024</div></div>
+    <div class="card" style="margin:0;padding:10px"><div class="kl">EBITDA</div><div class="kv" style="font-size:18px">${fmt(latestEbitda(c),1)}</div></div>
+    <div class="card" style="margin:0;padding:10px"><div class="kl">Margin</div><div class="kv" style="font-size:18px;color:${m>8?'var(--green)':m>5?'var(--amber)':'var(--red)'}">${pct(m)}</div></div>
+  </div>`;
+
+  // Revenue trend
+  h+=`<div class="card"><h3 class="mb-8" style="font-size:13px">Omsetning & EBITDA (5 år)</h3>
+    <div class="chart-wrap">${svgLine([{label:'Rev',data:c.fin.rev,color:'#0ea5e9'},{label:'EBITDA',data:c.fin.ebitda,color:'#10b981'}],c.fin.years.map(String),{w:440,h:150,min:0})}</div></div>`;
+
+  // Radar
+  h+=`<div class="card"><h3 class="mb-8" style="font-size:13px">KPI-profil</h3>
+    <div class="chart-wrap">${svgRadar(['Utnyttelse','Hit rate','Kvalitet','HMS','On Time','On Budget'],
+      [{data:[c.kpis.util,c.kpis.hit*2.5,c.kpis.quality,Math.max(0,100-c.kpis.ltif*30),c.kpis.onTime,c.kpis.onBudget],color:'#0ea5e9'}],
+      {w:440,h:260})}</div></div>`;
+
+  // KPI detail
+  h+=`<div class="card"><h3 class="mb-8" style="font-size:13px">KPI-detalj</h3>`;
+  const kpiList=[
+    ['Kapasitetsutnyttelse',c.kpis.util+'%'],['Hit rate',c.kpis.hit+'%'],['Backlog',c.kpis.backlog+' MNOK'],
+    ['LTIF',c.kpis.ltif],['Sykefravær',c.kpis.sick+'%'],['Turnover',c.kpis.turnover+'%'],
+    ['Kvalitetsscore',c.kpis.quality+'/100'],['Kundekonsentrasjon',c.kpis.custConc+'%'],
+    ['Rammeavtaler',c.kpis.framework+'%'],['Levert på tid',c.kpis.onTime+'%'],['Levert på budsjett',c.kpis.onBudget+'%'],
+  ];
+  kpiList.forEach(([k,v])=>{ h+=`<div class="flex justify-between fs-xs" style="padding:3px 0;border-bottom:1px solid var(--border)"><span class="text-muted">${k}</span><span class="fw-800">${v}</span></div>`; });
+  h+=`</div>`;
+
+  // Datakilde
+  h+=`<div class="card" style="border-color:var(--amber)"><div class="fs-xs text-amber fw-800 mb-8">📋 Datakilde</div><div class="fs-xs text-muted">${c.confNote}</div></div>`;
+
+  dc.innerHTML=h;
+  p.classList.add('open');
+}
+function closeDetail(){ document.getElementById('detailPanel').classList.remove('open'); }
+function selectMA(id){
+  const t=D.maTargets.find(x=>x.id===id);
+  if(!t) return;
+  const p=document.getElementById('detailPanel');
+  const dc=document.getElementById('detailContent');
+  const avgFit=Math.round((t.fit.strat+t.fit.comm+t.fit.ops+t.fit.geo)/4);
+  let h=`<h2 class="mb-8">${t.name}</h2><div class="fs-xs text-muted mb-16">${t.loc}, ${t.country} · ${t.segment} · ~${t.estEmp} ansatte · ${confDot(t.conf)}${t.conf}</div>`;
+  h+=`<div class="flex gap-8 mb-16">`;
+  const recCol=t.rec==='Prioritize'?'tag-scale':t.rec==='Engage'?'tag-improve':'';
+  h+=`<span class="hm-cell ${recCol}">${t.rec}</span></div>`;
+  h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+    <div class="card" style="margin:0;padding:10px"><div class="kl">Est. Revenue</div><div class="kv" style="font-size:18px">${t.estRev}</div><div class="ksub">MNOK</div></div>
+    <div class="card" style="margin:0;padding:10px"><div class="kl">Overall Fit</div><div class="kv" style="font-size:18px;color:var(--accent)">${avgFit}%</div></div>
+  </div>`;
+
+  // Fit breakdown
+  h+=`<div class="card"><h3 class="mb-8" style="font-size:13px">Fit-profil</h3>`;
+  [['Strategisk fit',t.fit.strat],['Kommersiell fit',t.fit.comm],['Operasjonell fit',t.fit.ops],['Geografisk fit',t.fit.geo],['Synergipotensial',t.synergy]].forEach(([k,v])=>{
+    h+=`<div class="score-bar"><div class="sbl">${k}</div><div class="sb-track"><div class="sb-fill" style="width:${v}%;background:${v>75?'var(--green)':v>60?'var(--amber)':'var(--text-dim)'}"></div></div><div class="sb-val">${v}</div></div>`;
+  });
+  h+=`</div>`;
+
+  // Radar
+  h+=`<div class="card"><h3 class="mb-8" style="font-size:13px">Profil</h3>
+    <div class="chart-wrap">${svgRadar(['Strat','Komm','Ops','Geo','Synergi'],
+      [{data:[t.fit.strat,t.fit.comm,t.fit.ops,t.fit.geo,t.synergy],color:'#10b981'}],{w:440,h:260})}</div></div>`;
+
+  h+=`<div class="card"><div class="fs-xs text-muted">${t.note}</div></div>`;
+  h+=`<div class="card" style="border-color:var(--amber)"><div class="fs-xs text-amber fw-800 mb-8">📋 Datakilde: ${t.conf}</div><div class="fs-xs text-muted">Kandidaten er identifisert basert på segmentanalyse og geografisk mapping. Finansielle estimater er basert på typiske nøkkeltall for selskaper av denne størrelsen i segmentet.</div></div>`;
+
+  dc.innerHTML=h;
+  p.classList.add('open');
+}
+
+// ═══════════════════ MODALS ═══════════════════
+function openAbout(){document.getElementById('aboutModal').classList.add('open');}
+function closeAbout(){document.getElementById('aboutModal').classList.remove('open');}
+function openDataModal(){
+  const dc=document.getElementById('dataModalContent');
+  let h=`<div class="grid-2 mb-16">
+    <div><h3 class="mb-8">Primærkilder</h3><ul class="fs-sm text-muted" style="list-style:disc;padding-left:16px">
+      <li><strong>submara.no</strong> — selskapsbeskrivelser, tjenester, lokasjoner, kontaktinfo, sertifiseringer</li>
+      <li><strong>Proff.no</strong> — driftsinntekter 2024, ansatte, daglig leder, org.nummer for alle porteføljeselskaper</li>
+      <li><strong>Brønnøysundregistrene</strong> — selskapsstruktur, eierskap (via Proff.no)</li>
+    </ul></div>
+    <div><h3 class="mb-8">Sekundærkilder</h3><ul class="fs-sm text-muted" style="list-style:disc;padding-left:16px">
+      <li><strong>Norsk Vann</strong> — VA-vedlikeholdsetterslep (300+ mrd NOK)</li>
+      <li><strong>NVE / Statens vegvesen</strong> — infrastrukturbehov tunneler, dammer</li>
+      <li><strong>Bransjeerfaring</strong> — typiske nøkkeltall for prosjektbasert dykkertjeneste</li>
+    </ul></div>
+  </div>`;
+  h+=`<h3 class="mb-8">Dataklassifisering per selskap</h3>`;
+  h+=`<table class="hm-table"><thead><tr><th>Selskap</th><th>Revenue</th><th>EBITDA</th><th>KPIer</th><th>Kommentar</th></tr></thead><tbody>`;
+  D.companies.forEach(c=>{
+    h+=`<tr><td class="fw-800">${c.brand}</td>
+      <td>${confDot(c.conf)}${c.conf==='Observed'?'Proff.no 2024':'Estimert'}</td>
+      <td>${confDot('Estimated')}Estimert (margin-proxy)</td>
+      <td>${confDot('Estimated')}Modellert</td>
+      <td class="fs-xs text-muted">${c.confNote}</td></tr>`;
+  });
+  h+=`</tbody></table>`;
+  h+=`<div class="card mt-16" style="border-color:var(--amber)"><h3 class="text-amber mb-8">⚠️ Viktige forbehold</h3>
+    <ul class="fs-sm text-muted" style="list-style:disc;padding-left:16px">
+      <li>EBITDA-tall er <strong>estimerte</strong> basert på typiske marginer for innaskjærs dykkertjenester (5-10%)</li>
+      <li>KPI-er (utnyttelse, hit rate, backlog, etc.) er <strong>modellerte</strong> basert på bransjebenchmarks og Scale/Improve/Fix-klassifisering</li>
+      <li>Historiske tall (2020-2023) er <strong>bakover-estimert</strong> fra bekreftet 2024-tall med antatt vekstrate</li>
+      <li>M&A-kandidater er basert på segmentanalyse — finansielle data er <strong>illustrative</strong></li>
+      <li>Markedsstørrelser er <strong>proxy-estimater</strong> basert på offentlige kilder og bransjeerfaring</li>
+    </ul></div>`;
+  h+=`<div class="fs-xs text-dim mt-16">Datainnsamling utført mars 2026. Verktøyet er en prototype — data bør verifiseres mot faktisk interndata før beslutninger.</div>`;
+  dc.innerHTML=h;
+  document.getElementById('dataModal').classList.add('open');
+}
+function closeDataModal(){document.getElementById('dataModal').classList.remove('open');}
+
+// ═══════════════════ CSV EXPORT ═══════════════════
+function exportCSV(type){
+  let csv='', filename='';
+  if(type==='revenue'){
+    csv='Selskap;Revenue 2024;EBITDA 2024;Margin;Ansatte;Status;Datakilde\n';
+    D.companies.forEach(c=>{
+      csv+=`${c.brand};${latestRev(c)};${latestEbitda(c).toFixed(1)};${latestMargin(c).toFixed(1)}%;${c.emp};${c.status};${c.conf}\n`;
+    });
+    filename='submara_portefolje.csv';
+  } else if(type==='markets'){
+    csv='Land;Segment;Størrelse MNOK;Vekst;Kommentar\n';
+    D.markets.forEach(m=>{m.segments.forEach(s=>{ csv+=`${m.country};${s.name};${s.size};${s.growth}%;${s.note}\n`; });});
+    filename='submara_markeder.csv';
+  }
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=filename; a.click();
+}
+
+// ═══════════════════ CLICK OUTSIDE MODALS ═══════════════════
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('modal-overlay')) e.target.classList.remove('open');
+  if(!e.target.closest('.detail-panel')&&!e.target.closest('.hm-table tr')&&!e.target.closest('[onclick*="openDetail"]')&&!e.target.closest('[onclick*="selectMA"]')&&!e.target.closest('circle[onclick]')&&!e.target.closest('rect[onclick]')){
+    // Don't close on general clicks — only via close button
+  }
+});
+
+// ═══════════════════ INIT ═══════════════════
+renderView1();
+</script>
+</body>
+</html>
