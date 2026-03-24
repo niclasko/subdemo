@@ -309,8 +309,10 @@ input[type=range]::-moz-range-thumb {
 <!-- ═══════════════════ TOP NAVIGATION ═══════════════════ -->
 <nav class="topnav">
   <div class="logo">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 12c0-2.5 1.5-5 4-5s4 2.5 4 5-1.5 5-4 5-4-2.5-4-5z"/><path d="M2 12h4M18 12h4"/></svg>
-    Submara
+    <svg viewBox="0 0 140 28" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:110px;height:22px">
+      <path d="M4 18c2-3 4-5 7-5s5 2 7 5 4 5 7 5 5-2 7-5" stroke="#0ea5e9" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+      <text x="36" y="20" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif" font-size="17" font-weight="800" fill="#e2e8f0" letter-spacing="-0.5">submara</text>
+    </svg>
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="switchApp('app1',this)" id="tab-app1">
@@ -457,49 +459,77 @@ const D = {
 
   // M&A candidates
   maTargets: [
-    { id:'t1', name:'Bergen Dykkerselskap AS', country:'NO', loc:'Bergen', lat:60.39, lon:5.33, segment:'Anlegg', estRev:30, estEmp:18, fit:{strat:82, comm:75, ops:80, geo:85}, synergy:72, complexity:'Low', conf:'Inferred', rec:'Prioritize', note:'Complementary to IMC in Bergen region. Would strengthen Vestland presence.' },
-    { id:'t2', name:'Nordvest Dykk AS', country:'NO', loc:'Ålesund', lat:62.47, lon:6.15, segment:'Anlegg / Skip', estRev:22, estEmp:14, fit:{strat:78, comm:70, ops:75, geo:72}, synergy:68, complexity:'Low', rec:'Engage', conf:'Estimated', note:'Fills geographic gap in Møre og Romsdal between G. Øye and Trondheim.' },
-    { id:'t3', name:'Trønder Dykk AS', country:'NO', loc:'Trondheim', lat:63.43, lon:10.40, segment:'Anlegg / VA', estRev:35, estEmp:20, fit:{strat:85, comm:78, ops:82, geo:90}, synergy:78, complexity:'Medium', rec:'Prioritize', conf:'Estimated', note:'Trøndelag is key white spot. Strong VA market driven by municipal investments.' },
-    { id:'t4', name:'Sjødykk Stavanger AS', country:'NO', loc:'Stavanger', lat:58.97, lon:5.73, segment:'Skip & rigger', estRev:18, estEmp:10, fit:{strat:70, comm:65, ops:72, geo:88}, synergy:62, complexity:'Low', rec:'Track', conf:'Estimated', note:'Ship/rig focused — would add capability to EB Marine hub. Cyclical exposure.' },
-    { id:'t5', name:'AquaScan Nordic AS', country:'NO', loc:'Oslo', lat:59.91, lon:10.75, segment:'Survey & ROV', estRev:15, estEmp:8, fit:{strat:80, comm:72, ops:68, geo:70}, synergy:65, complexity:'Medium', rec:'Engage', conf:'Estimated', note:'Digital survey tech — supports Submara Survey growth. Technology play.' },
-    { id:'t6', name:'DykTeknik AB', country:'SE', loc:'Göteborg', lat:57.71, lon:11.97, segment:'Anlegg / VA', estRev:45, estEmp:28, fit:{strat:82, comm:68, ops:72, geo:65}, synergy:70, complexity:'High', rec:'Track', conf:'Estimated', note:'Sweden entry. Göteborg strong port/infrastructure market. Cultural alignment.' },
-    { id:'t7', name:'Marin Entreprenad AB', country:'SE', loc:'Malmö', lat:55.60, lon:13.00, segment:'Marine anlegg', estRev:55, estEmp:32, fit:{strat:78, comm:65, ops:70, geo:60}, synergy:65, complexity:'High', rec:'Track', conf:'Estimated', note:'Southern Sweden / Øresund corridor. Bridge/tunnel maintenance market.' },
-    { id:'t8', name:'Scandinavian Divers AB', country:'SE', loc:'Stockholm', lat:59.33, lon:18.07, segment:'Anlegg / Survey', estRev:38, estEmp:22, fit:{strat:75, comm:62, ops:68, geo:55}, synergy:60, complexity:'High', rec:'Track', conf:'Estimated', note:'Stockholm market — freshwater infrastructure. Different regulatory environment.' },
-    { id:'t9', name:'Dansk Dykkerservice ApS', country:'DK', loc:'København', lat:55.68, lon:12.57, segment:'Anlegg / Kabel', estRev:40, estEmp:24, fit:{strat:80, comm:70, ops:72, geo:62}, synergy:68, complexity:'Medium', rec:'Engage', conf:'Estimated', note:'Denmark entry. Offshore wind cable market growing fast. Bridge maintenance.' },
-    { id:'t10', name:'Nordic Marine Works ApS', country:'DK', loc:'Esbjerg', lat:55.47, lon:8.45, segment:'Kabel / Offshore', estRev:52, estEmp:30, fit:{strat:76, comm:68, ops:70, geo:58}, synergy:64, complexity:'Medium', rec:'Track', conf:'Estimated', note:'Esbjerg = energy hub. Offshore wind synergies. Higher complexity.' },
-    { id:'t11', name:'Briggs Marine UK', country:'UK', loc:'Fife, Scotland', lat:56.20, lon:-3.15, segment:'Marine services', estRev:180, estEmp:120, fit:{strat:72, comm:55, ops:60, geo:40}, synergy:50, complexity:'Very High', rec:'Track', conf:'Inferred', note:'Major UK marine contractor. Likely too large for near-term but strategic reference.' },
-    { id:'t12', name:'Hughes Sub Surface', country:'UK', loc:'Plymouth', lat:50.38, lon:-4.14, segment:'Diving / inspection', estRev:25, estEmp:18, fit:{strat:70, comm:58, ops:62, geo:35}, synergy:45, complexity:'High', rec:'Track', conf:'Estimated', note:'UK beachhead candidate. Niche subsurface services. Different regulatory framework.' },
-    { id:'t13', name:'SubC Engineering AS', country:'NO', loc:'Haugesund', lat:59.41, lon:5.27, segment:'ROV / Survey', estRev:28, estEmp:15, fit:{strat:84, comm:75, ops:78, geo:82}, synergy:75, complexity:'Medium', rec:'Prioritize', conf:'Estimated', note:'ROV/survey specialist. Complements Submara Survey. Technology synergies.' },
-    { id:'t14', name:'Vest Dykk AS', country:'NO', loc:'Haugesund', lat:59.41, lon:5.27, segment:'Anlegg', estRev:16, estEmp:10, fit:{strat:72, comm:68, ops:74, geo:80}, synergy:66, complexity:'Low', rec:'Engage', conf:'Estimated', note:'Regional diving company. Simple add-on to Rogaland cluster.' },
+    // ── NORGE (8 kandidater) ──
+    { id:'t1', name:'Bergen Dykkerselskap AS', country:'NO', loc:'Bergen', region:'Vestland', lat:60.39, lon:5.33, segment:'Anlegg', desc:'Regionalt dykkerselskap med sterk position i Vestland. Komplementært til IMC.', estRev:30, estEmp:18, source:'Illustrative — basert på bransjeanalyse', sizeProxy:'18 ansatte, ~1.7 MNOK/ansatt', fit:{strat:82, comm:75, ops:80, geo:85}, synergy:72, complexity:'Low', dataConf:'Medium', conf:'Inferred', rec:'Prioritize', note:'Complementary to IMC in Bergen region. Would strengthen Vestland hub with broader service coverage.' },
+    { id:'t2', name:'Nordvest Dykk AS', country:'NO', loc:'Ålesund', region:'Møre og Romsdal', lat:62.47, lon:6.15, segment:'Anlegg / Skip', desc:'Fokus på maritime anleggsarbeid og skipsinspeksjon i Nordvest-Norge.', estRev:22, estEmp:14, source:'Illustrative — ingen offentlig data', sizeProxy:'Regionalt selskap, estimert fra ansatte', fit:{strat:78, comm:70, ops:75, geo:72}, synergy:68, complexity:'Low', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'Fills geographic gap in Møre og Romsdal. Strong aquaculture/maritime market regionally.' },
+    { id:'t3', name:'Trønder Dykk AS', country:'NO', loc:'Trondheim', region:'Trøndelag', lat:63.43, lon:10.40, segment:'Anlegg / VA', desc:'VA-fokusert dykkerselskap i Trøndelag. Viktig hvitt flekk-marked.', estRev:35, estEmp:20, source:'Illustrative — Trøndelag markedsvurdering', sizeProxy:'Estimert fra kommunalt VA-marked i regionen', fit:{strat:85, comm:78, ops:82, geo:90}, synergy:78, complexity:'Medium', dataConf:'Medium', rec:'Prioritize', conf:'Estimated', note:'Trøndelag is key white spot. Strong VA market driven by municipal investments. ~1.2 mrd NOK VA-investeringer årlig i regionen.' },
+    { id:'t4', name:'Sjødykk Stavanger AS', country:'NO', loc:'Stavanger', region:'Rogaland', lat:58.97, lon:5.73, segment:'Skip & rigger', desc:'Skipsinspeksjon og rigg-service med base i Rogaland.', estRev:18, estEmp:10, source:'Illustrative', sizeProxy:'Liten nisjeaktør, Stavanger-klynge', fit:{strat:70, comm:65, ops:72, geo:88}, synergy:62, complexity:'Low', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Ship/rig focused — adds capability to EB Marine hub. Cyclical exposure to offshore.' },
+    { id:'t5', name:'AquaScan Nordic AS', country:'NO', loc:'Oslo', region:'Østlandet', lat:59.91, lon:10.75, segment:'Survey & ROV', desc:'Digital survey-teknologi med fokus på undervanns­inspeksjon og kartlegging.', estRev:15, estEmp:8, source:'Illustrative — tech segment', sizeProxy:'Liten tech-orientert aktør', fit:{strat:80, comm:72, ops:68, geo:70}, synergy:65, complexity:'Medium', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'Digital survey tech — supports Submara Survey growth. Key technology play for platform differentiation.' },
+    { id:'t13', name:'SubC Engineering AS', country:'NO', loc:'Haugesund', region:'Rogaland', lat:59.41, lon:5.27, segment:'ROV / Survey', desc:'ROV og survey-spesialist med sterk teknisk kompetanse.', estRev:28, estEmp:15, source:'Illustrative — ROV segment', sizeProxy:'15 ansatte, ~1.9 MNOK/ansatt', fit:{strat:84, comm:75, ops:78, geo:82}, synergy:75, complexity:'Medium', dataConf:'Medium', rec:'Prioritize', conf:'Estimated', note:'ROV/survey specialist complementing Submara Survey. Technology synergies. Rogaland cluster.' },
+    { id:'t14', name:'Vest Dykk AS', country:'NO', loc:'Haugesund', region:'Rogaland', lat:59.41, lon:5.27, segment:'Anlegg', desc:'Regional dykkervirksomhet. Enkel add-on til Rogaland-klynge.', estRev:16, estEmp:10, source:'Illustrative', sizeProxy:'Liten aktør, enkel integrasjon', fit:{strat:72, comm:68, ops:74, geo:80}, synergy:66, complexity:'Low', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'Regional diving company. Simple add-on to strengthen Rogaland cluster with EB Marine.' },
+    { id:'t15', name:'Polar Dykk AS', country:'NO', loc:'Hammerfest', region:'Finnmark', lat:70.66, lon:23.68, segment:'Anlegg / Marine', desc:'Nord-Norge akvakultur og energiinfrastruktur under vann.', estRev:12, estEmp:8, source:'Illustrative — northern Norway', sizeProxy:'Estimert fra Nord-Norge markedsstørrelse', fit:{strat:74, comm:60, ops:65, geo:68}, synergy:55, complexity:'Medium', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Nordligste marked. Voksende akvakultur og energiinfrastruktur i Finnmark. Synergier med Fagdykk og Dykkerkompaniet.' },
+
+    // ── SVERIGE (7 kandidater) ──
+    { id:'t6', name:'DykTeknik AB', country:'SE', loc:'Göteborg', region:'Västra Götaland', lat:57.71, lon:11.97, segment:'Anlegg / VA', desc:'Ledende västsvensk dykkeroperatør. Sterk innen VA og havn.', estRev:45, estEmp:28, source:'Estimert — svensk bransjeanalyse', sizeProxy:'~28 ansatte, svensk lønnsnivå', fit:{strat:82, comm:68, ops:72, geo:65}, synergy:70, complexity:'High', dataConf:'Medium', rec:'Engage', conf:'Estimated', note:'Sweden entry platform. Göteborg: Skandinavias største havn. Sterkt VA-marked. ~600 MNOK årlige VA-investeringer i regionen.' },
+    { id:'t7', name:'Marin Entreprenad AB', country:'SE', loc:'Malmö', region:'Skåne', lat:55.60, lon:13.00, segment:'Marine anlegg', desc:'Marint anleggsselskap i Øresund-regionen. Bro/tunnel vedlikehold.', estRev:55, estEmp:32, source:'Estimert — infrastrukturmarked', sizeProxy:'Øresund/brovedlikehold segment', fit:{strat:78, comm:65, ops:70, geo:60}, synergy:65, complexity:'High', dataConf:'Medium', rec:'Track', conf:'Estimated', note:'Southern Sweden / Øresund corridor. Storebælt and Øresund bridge maintenance market. Cross-border synergies with Denmark.' },
+    { id:'t8', name:'Scandinavian Divers AB', country:'SE', loc:'Stockholm', region:'Stockholm', lat:59.33, lon:18.07, segment:'Anlegg / Survey', desc:'Hovedstadsregionen. VA-infrastruktur og survey-tjenester.', estRev:38, estEmp:22, source:'Estimert — Stockholm VA-marked', sizeProxy:'Stor kommune med stort VA-behov', fit:{strat:75, comm:62, ops:68, geo:55}, synergy:60, complexity:'High', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Stockholm: largest Nordic freshwater infrastructure market. Different regulatory environment but massive municipal spending on VA renewal.' },
+    { id:'t16', name:'Norrlands Dyk AB', country:'SE', loc:'Luleå', region:'Norrbotten', lat:65.58, lon:22.15, segment:'Anlegg / Energi', desc:'Nordsvensk aktør innen energiinfrastruktur og industrielt undervannsarbeid.', estRev:20, estEmp:12, source:'Illustrative', sizeProxy:'Nordsvensk nisjeaktør', fit:{strat:70, comm:58, ops:64, geo:52}, synergy:55, complexity:'High', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Northern Sweden industrial/energy market. Hydrogen and green steel infrastructure driving new underwater work in Norrbotten.' },
+    { id:'t17', name:'Undervattensteknik Sverige AB', country:'SE', loc:'Göteborg', region:'Västra Götaland', lat:57.70, lon:11.95, segment:'Survey & ROV', desc:'Survey-spesialist for havn og sjøfart i Västsverige.', estRev:18, estEmp:10, source:'Illustrative', sizeProxy:'ROV/survey niche', fit:{strat:76, comm:64, ops:70, geo:62}, synergy:62, complexity:'Medium', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'ROV and survey niche player. Could combine with DykTeknik for comprehensive Göteborg platform.' },
+    { id:'t18', name:'Aqua Teknik AB', country:'SE', loc:'Norrköping', region:'Östergötland', lat:58.59, lon:16.18, segment:'Vann & avløp', desc:'VA-spesialist for kommunale prosjekter i Mellansverige.', estRev:25, estEmp:16, source:'Illustrative', sizeProxy:'Mellom-svensk VA-segment', fit:{strat:74, comm:66, ops:68, geo:55}, synergy:58, complexity:'Medium', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Central Sweden VA specialist. Positioned between Stockholm and Malmö. Fill geographic gap.' },
+    { id:'t19', name:'Kabeltech Marine AB', country:'SE', loc:'Kalmar', region:'Kalmar', lat:56.66, lon:16.36, segment:'Kabel / Energi', desc:'Sjøkabelinstallasjon og offshore vindtilknytning i Østersjøen.', estRev:32, estEmp:18, source:'Illustrative — vindenergimarked', sizeProxy:'Estimert fra Østersjøen vindmarked', fit:{strat:77, comm:70, ops:66, geo:58}, synergy:64, complexity:'Medium', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'Baltic Sea cable specialist. Offshore wind in Östersjön growing rapidly. 4+ GW pipeline in Swedish waters.' },
+
+    // ── DANMARK (7 kandidater) ──
+    { id:'t9', name:'Dansk Dykkerservice ApS', country:'DK', loc:'København', region:'Sjælland', lat:55.68, lon:12.57, segment:'Anlegg / Kabel', desc:'Allround dykkerselskap med fokus på kabel og marint anlegg.', estRev:40, estEmp:24, source:'Estimert — dansk marked', sizeProxy:'~24 ansatte, dansk lønnsnivå', fit:{strat:80, comm:70, ops:72, geo:62}, synergy:68, complexity:'Medium', dataConf:'Medium', rec:'Engage', conf:'Estimated', note:'Denmark entry platform. Copenhagen harbor + Fehmarn belt tunnel project creating large demand. Offshore cable market growing 15%/yr.' },
+    { id:'t10', name:'Nordic Marine Works ApS', country:'DK', loc:'Esbjerg', region:'Syddanmark', lat:55.47, lon:8.45, segment:'Kabel / Offshore', desc:'Offshore energi-hub. Sjøkabel og vindpark-service.', estRev:52, estEmp:30, source:'Estimert — Esbjerg offshore hub', sizeProxy:'Esbjerg er verdens ledende vindenergi-havn', fit:{strat:76, comm:68, ops:70, geo:58}, synergy:64, complexity:'Medium', dataConf:'Medium', rec:'Engage', conf:'Estimated', note:'Esbjerg = global offshore wind hub (Port of Esbjerg handles 75%+ of European wind turbine shipments). Strong synergies with cable competence.' },
+    { id:'t20', name:'Øresund Marine ApS', country:'DK', loc:'Helsingør', region:'Sjælland', lat:56.04, lon:12.61, segment:'Marine anlegg', desc:'Bro- og havn­vedlikehold langs Øresund-kysten.', estRev:22, estEmp:14, source:'Illustrative', sizeProxy:'Øresund infrastruktur-segment', fit:{strat:72, comm:64, ops:66, geo:58}, synergy:58, complexity:'Medium', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Øresund strait infrastructure maintenance. Proximity to Øresund and Kronborg area. Bridge/port-focused.' },
+    { id:'t21', name:'Jysk Undervandsentreprise ApS', country:'DK', loc:'Aalborg', region:'Nordjylland', lat:57.05, lon:9.92, segment:'Anlegg / VA', desc:'Nord-Jylland VA og maritimt anlegg.', estRev:28, estEmp:16, source:'Illustrative', sizeProxy:'Nord-Jylland kommunalt segment', fit:{strat:74, comm:66, ops:68, geo:55}, synergy:60, complexity:'Medium', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Northern Jutland VA and maritime construction. Aalborg/Limfjord area with significant underwater infrastructure needs.' },
+    { id:'t22', name:'Baltic Subsea ApS', country:'DK', loc:'Fredericia', region:'Syddanmark', lat:55.57, lon:9.75, segment:'Survey & ROV', desc:'ROV-inspeksjon og digital survey for offshore og infrastruktur.', estRev:18, estEmp:10, source:'Illustrative', sizeProxy:'Nisje survey/ROV', fit:{strat:78, comm:68, ops:66, geo:56}, synergy:62, complexity:'Low', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'Lille Belt area. Survey/ROV niche — complements cable companies. Denmark has 7,300 km coastline needing inspection.' },
+    { id:'t23', name:'Green Marine DK ApS', country:'DK', loc:'Esbjerg', region:'Syddanmark', lat:55.48, lon:8.44, segment:'Kabel / Offshore', desc:'Spesialisert på grønn energi undervannsinstallasjon.', estRev:35, estEmp:20, source:'Illustrative — grønn energi', sizeProxy:'Esbjerg windfarm services', fit:{strat:80, comm:72, ops:68, geo:60}, synergy:66, complexity:'Medium', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'Green energy subsea installer. Denmark targeting 12.9 GW offshore wind by 2030. Massive cable/foundation inspection demand.' },
+    { id:'t24', name:'Storebælt Dyk ApS', country:'DK', loc:'Korsør', region:'Sjælland', lat:55.33, lon:11.14, segment:'Marine anlegg', desc:'Vedlikehold av bro- og tunnelinfrastruktur i Storebælt-området.', estRev:15, estEmp:9, source:'Illustrative', sizeProxy:'Storebælt vedlikehold', fit:{strat:68, comm:60, ops:64, geo:52}, synergy:52, complexity:'Low', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Niche: Great Belt bridge/tunnel maintenance. A/S Storebælt spends ~200 MDKK/year on maintenance.' },
+
+    // ── UK (7 kandidater) ──
+    { id:'t11', name:'Briggs Marine Contractors', country:'UK', loc:'Fife, Scotland', region:'Scotland', lat:56.20, lon:-3.15, segment:'Marine services', desc:'Stor britisk marin­entreprenør. Oljeutslipp, marine ops, havnearbeid.', estRev:180, estEmp:120, source:'Companies House, Briggs Marine', sizeProxy:'Offentlig rapportert', fit:{strat:72, comm:55, ops:60, geo:40}, synergy:50, complexity:'Very High', dataConf:'High', rec:'Track', conf:'Observed', note:'Major UK marine contractor. Revenue ~£15M. Large for near-term acquisition but strategic reference. Could be a JV partner.' },
+    { id:'t12', name:'Hughes Sub Surface Engineering', country:'UK', loc:'Plymouth', region:'South West', lat:50.38, lon:-4.14, segment:'Diving / inspection', desc:'Nisje subsea-tjenester med fokus på havner og forsvar.', estRev:25, estEmp:18, source:'Estimert — UK niche segment', sizeProxy:'~18 ansatte, britisk lønn', fit:{strat:70, comm:58, ops:62, geo:35}, synergy:45, complexity:'High', dataConf:'Low', rec:'Track', conf:'Estimated', note:'UK beachhead candidate. Niche subsurface services near Royal Navy base. Defence diving market.' },
+    { id:'t25', name:'Subsea & Marine Solutions Ltd', country:'UK', loc:'Aberdeen', region:'Scotland', lat:57.15, lon:-2.09, segment:'ROV / Offshore', desc:'Aberdeen-basert ROV og offshore inspeksjon.', estRev:40, estEmp:25, source:'Illustrative — Aberdeen cluster', sizeProxy:'Estimert fra Aberdeen subsea klynge', fit:{strat:74, comm:60, ops:62, geo:38}, synergy:52, complexity:'High', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Aberdeen: global subsea capital. Offshore decommissioning creating new market (£1.5bn/yr+ by 2030). North Sea synergies.' },
+    { id:'t26', name:'Marine & Civil Engineering Ltd', country:'UK', loc:'Southampton', region:'South East', lat:50.91, lon:-1.40, segment:'Marine anlegg', desc:'Havne- og kystinfrastruktur i Sør-England.', estRev:60, estEmp:35, source:'Illustrative', sizeProxy:'Estimert fra Solent-klyngen', fit:{strat:68, comm:55, ops:58, geo:32}, synergy:45, complexity:'Very High', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Southampton/Solent infrastructure. Large port city with ongoing development. Different market dynamic but significant opportunity.' },
+    { id:'t27', name:'North Sea Divers Ltd', country:'UK', loc:'Lowestoft', region:'East Anglia', lat:52.48, lon:1.75, segment:'Kabel / Offshore vind', desc:'Offshore vindservice og kabelarbeid i Nordsjøen/East Anglia.', estRev:30, estEmp:18, source:'Illustrative — offshore wind', sizeProxy:'East Anglia vindmarked', fit:{strat:76, comm:64, ops:62, geo:36}, synergy:55, complexity:'High', dataConf:'Low', rec:'Engage', conf:'Estimated', note:'East Anglia offshore wind zone. UK has 14 GW installed + 50 GW pipeline. Cable inspection/maintenance demand growing 20%+/yr.' },
+    { id:'t28', name:'Celtic Diving Services Ltd', country:'UK', loc:'Swansea', region:'Wales', lat:51.62, lon:-3.94, segment:'Anlegg / VA', desc:'VA- og infrastruktursdykking i Wales og Vest-England.', estRev:15, estEmp:10, source:'Illustrative', sizeProxy:'Regional walisisk aktør', fit:{strat:66, comm:56, ops:60, geo:30}, synergy:42, complexity:'High', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Wales/West England. Welsh Water (Dŵr Cymru) investing £2.8bn+ in AMP8. Niche VA diving market.' },
+    { id:'t29', name:'Tidal Marine Engineering Ltd', country:'UK', loc:'Inverness', region:'Scotland', lat:57.48, lon:-4.22, segment:'Marine / Energi', desc:'Skotsk energi- og marinentreprenør. Tidevann og vindkraft.', estRev:22, estEmp:14, source:'Illustrative — Scottish renewables', sizeProxy:'Estimert fra skotsk fornybarmarked', fit:{strat:72, comm:58, ops:60, geo:35}, synergy:48, complexity:'High', dataConf:'Low', rec:'Track', conf:'Estimated', note:'Scottish Highlands renewables. Tidal energy emerging sector. Inverness/Cromarty Firth green freeport creating new subsea opportunities.' },
   ],
 
   // Market data per country/segment
   markets: [
-    { country:'Norge', flag:'🇳🇴', size:4800, growth:6.5, frag:75, compInt:65, regBar:55, relevance:95, segments:[
-      { name:'Vann & avløp', size:1800, growth:8, note:'Norsk Vann: 300+ mrd NOK vedlikeholdsetterslep over 20 år' },
-      { name:'Kabel / energi', size:900, growth:7, note:'Elektrifisering, sjøkabler, vindkraft-tilknytning' },
-      { name:'Marine anlegg', size:800, growth:5, note:'Havn, kai, broer, dokker — offentlig vedlikehold' },
-      { name:'Survey & ROV', size:450, growth:12, note:'Digitalisering, dokumentasjonskrav, tunnel/dam inspeksjon' },
-      { name:'Skip & rigger', size:600, growth:3, note:'Skipsinspeksjon, hull cleaning, klassifisering' },
-      { name:'Tunnel / inspeksjon', size:250, growth:15, note:'Vannkrafttunneler, bro/dam — stort etterslep' }
+    { country:'Norge', flag:'🇳🇴', pop:5.5, size:4800, growth:6.5, frag:75, compInt:65, regBar:55, relevance:95, segments:[
+      { name:'Vann & avløp', size:1800, growth:8, conf:'High', drivers:'VA-nett: ~49 000 km vannledning, ~38 000 km avløp. Snittalder 35+ år. Norsk Vann rapport 2023: 332 mrd NOK totalinvestering neste 20 år. Statsbudsjettet 2025: økt VA-tilskudd. Lekkasjerate ~30%.', method:'Basert på Norsk Vann 2023 rapport: 332 mrd / 20 år = ~16.6 mrd/år totalt. Undervannsdykker-andel estimert ~10-12% av totalprosjekter = ~1.7-2.0 mrd/år.', submaraRelevance:95, attractiveness:92, note:'Norsk Vann rapport 2023: 332 mrd NOK vedlikeholdsetterslep over 20 år. Dykkerrelatert andel ~10-12%. Økende regulatorisk press.' },
+      { name:'Kabel / energi', size:900, growth:7, conf:'Medium', drivers:'Elektrifisering av sokkelen (NCS Power from Shore). Sjøkabler til vindparker (Sørlige Nordsjø II, Utsira Nord). NVE: 15+ nye sjøkabelprosjekter. Havvind-mål: 30 GW innen 2040.', method:'Statnett investeringsplan: ~100 mrd 2024-2033. Sjøkabel-andel ~25%. Dykkerrelatert ~8-10% av kabelprosjekter.', submaraRelevance:85, attractiveness:88, note:'Statnett planlegger ~25 mrd NOK i sjøkabel neste 10 år. Dykkerteknikk er Submaras kabelspesialist.' },
+      { name:'Marine anlegg', size:800, growth:5, conf:'Medium', drivers:'120+ offentlige havner, 3 000+ kaianlegg. KS (Kommunesektorens org.): anslått 100 mrd NOK vedlikeholdsetterslep i kommunal infrastruktur. Nasjonal transportplan 2025-2036: 1 220 mrd NOK totalt.', method:'Estimert fra NTPs havne/kyst-budsjett (~8-10 mrd/år). Undervannsdel ~8-10%.', submaraRelevance:90, attractiveness:82, note:'Stor offentlig etterspørsel. Kommunalt vedlikeholdsetterslep driver stabil aktivitet.' },
+      { name:'Survey & ROV', size:450, growth:12, conf:'Medium', drivers:'NVE: 1 200+ damkonstruksjoner, ~400 vannkrafttunneler trenger inspeksjon. Digitalisering driver overgang fra manuell til ROV/multibeam. Submara NTI: 15 km rekkevidde-ROV.', method:'Estimert: ~500+ tunneler/dammer á 0.5-1.5 MNOK inspeksjonskostnad/syklus. Industriell ROV vokser 10-15%/år.', submaraRelevance:90, attractiveness:90, note:'NTI-teknologi er differensiator. Høyest vekst i porteføljen. Digitalt fortrinn.' },
+      { name:'Skip & rigger', size:600, growth:3, conf:'Medium', drivers:'Norsk-kontrollert flåte: ~1 900 skip >100 BRT. DNV klassifiseringsinspeksjoner. Hull cleaning regulert under AFS-konvensjonen. Økende krav til biofouling-kontroll.', method:'~1 900 skip * gjennomsnittlig 0.3-0.5 MNOK/inspeksjon, pluss rigg/offshore. Syklisk marked.', submaraRelevance:70, attractiveness:65, note:'Modent, syklisk marked. Offshoresyklus påvirker. Viktig basisaktivitet for flere OpCos.' },
+      { name:'Tunnel / inspeksjon', size:250, growth:15, conf:'Medium', drivers:'1 200+ tunneler i Norge (Statens vegvesen). Vannkrafttunneler: 4 300 km. NVE pålegger re-inspeksjon hvert 5.-15. år. Broer: 18 500+ veibro i Norge.', method:'Estimert fra NVEs inspeksjonskrav: ~100-150 inspeksjoner/år á 1-3 MNOK. Sterk vekst pga. nytt regelverk.', submaraRelevance:88, attractiveness:92, note:'Størst vekstpotensial. NTI har unik 15km ROV-kapasitet. Regulatorisk medvind.' }
     ]},
-    { country:'Sverige', flag:'🇸🇪', size:3200, growth:5.0, frag:65, compInt:60, regBar:50, relevance:70, segments:[
-      { name:'Vann & avløp', size:1200, growth:6, note:'Lignende VA-etterslep som Norge' },
-      { name:'Marine anlegg', size:700, growth:4, note:'Havner, infrastruktur Göteborg/Malmö/Stockholm' },
-      { name:'Kabel / energi', size:500, growth:8, note:'Offshore vind i Östersjöen' },
-      { name:'Survey & ROV', size:300, growth:10, note:'Voksende digitalt segment' }
+    { country:'Sverige', flag:'🇸🇪', pop:10.5, size:3800, growth:5.5, frag:65, compInt:60, regBar:50, relevance:70, segments:[
+      { name:'Vann & avløp', size:1400, growth:6, conf:'Medium', drivers:'Svenskt Vatten: 200+ mrd SEK investeringsbehov neste 20 år. ~90 000 km VA-ledninger. 4 av 5 kommuner rapporterer behov for VA-fornyelse. Rivning/nybygg av reningsverk.', method:'Svenskt Vatten rapport 2022: 10-12 mrd SEK/år VA-invest. Dykker/undervannsdel ~10% = 1.0-1.2 mrd SEK ≈ 1.1-1.4 mrd NOK.', submaraRelevance:80, attractiveness:78, note:'Svenskt Vatten rapport: 200+ mrd SEK etterslep. Lignende dynamikk som Norge men 5-10 år bak i investeringssyklus.' },
+      { name:'Marine anlegg', size:800, growth:4, conf:'Medium', drivers:'52 allmänna hamnar. Göteborgs havn: Skandinavias største. Stockholm havn utbygging. Broar: ~20 000 i Sverige. Försvarsinfrastruktur (NATO-tilpasning).', method:'Trafikverket + havnebudsjetter. Marint anlegg ~5-8 mrd SEK/år totalt. Dykkerandel ~10%.', submaraRelevance:72, attractiveness:70, note:'Göteborg er naturlig inngangsport. NATO-medlemskap driver ny forsvarsinfrastruktur (ubåtsbaser, havner).' },
+      { name:'Kabel / energi', size:600, growth:8, conf:'Medium', drivers:'Vindkraft i Östersjön: 4+ GW i pipeline (Gotland, Blekinge). SvK nettinvesteringsplan: 100+ mrd SEK 2024-2033. NordBalt, NordLink-vedlikehold.', method:'SvK sjøkabel-investering ~15-20 mrd SEK neste 10 år. Dykkerandel ~5-8%.', submaraRelevance:75, attractiveness:80, note:'Stor pipeline offshore vind i Östersjön. SvK-investeringer skaper kabelmarked.' },
+      { name:'Survey & ROV', size:350, growth:10, conf:'Low', drivers:'Voksende segment med Försvarsmakten, hamnbolag og energisektoren. Digitalisering av inspeksjon lignende Norge.', method:'Estimert som ~25% av norsk nivå justert for BNP og kystlinje.', submaraRelevance:70, attractiveness:75, note:'Voksende men fragmentert. Inngang via Göteborg-plattform.' },
+      { name:'Skip & rigger', size:400, growth:3, conf:'Low', drivers:'~1 600 svenskregistrerte skip. Göteborg og Malmö hovedhavner. Grønlands–inspeksjoner. USCG/BWM-krav driver hull cleaning.', method:'Estimert fra flåtestørrelse og inspeksjonskrav.', submaraRelevance:55, attractiveness:55, note:'Sekundært segment for Sverige-entry.' },
+      { name:'Tunnel / inspeksjon', size:250, growth:9, conf:'Low', drivers:'~2 100 tunneler i Sverige (Trafikverket). Vattenkrafttunneler: ~1 000 km. Behov for re-inspeksjon.', method:'Estimert fra tunnelbestand og inspeksjonssykluser.', submaraRelevance:65, attractiveness:72, note:'NTI-teknologi er direkte overførbar til Sverige.' }
     ]},
-    { country:'Danmark', flag:'🇩🇰', size:2800, growth:5.5, frag:60, compInt:70, regBar:45, relevance:65, segments:[
-      { name:'Kabel / offshore', size:1000, growth:9, note:'Verdensledende offshore vind — Esbjerg hub' },
-      { name:'Marine anlegg', size:600, growth:4, note:'Bro-vedlikehold (Storebælt, Øresund)' },
-      { name:'Vann & avløp', size:500, growth:5, note:'København stor infrastruktur' },
-      { name:'Survey & ROV', size:250, growth:11, note:'Vindpark-inspeksjon' }
+    { country:'Danmark', flag:'🇩🇰', pop:5.9, size:3200, growth:6.0, frag:60, compInt:70, regBar:45, relevance:65, segments:[
+      { name:'Kabel / offshore vind', size:1200, growth:10, conf:'High', drivers:'Verdensledende offshore wind: mål 12.9 GW innen 2030 (inkl. energy island). Esbjerg: 75% av Europas vindturbiner. 8 eksisterende vindparker, 5+ under planlegging. Kabelnettet krever inspeksjon hvert 3.-5. år.', method:'Danish Energy Agency: 30+ mrd DKK vindkraft-investeringer 2024-2030. Kabelinstallasjon og inspeksjon ~10-15% av totalkapex. Dykkerandel ~5-8%.', submaraRelevance:80, attractiveness:88, note:'Verdensklasse offshore wind-marked. Energiøy Danmark skaper nytt 10 GW hub. Submara kabelkompetanse direkte relevant.' },
+      { name:'Marine anlegg', size:700, growth:4, conf:'Medium', drivers:'Fehmarnbelt tunnelen (Europas største infrastrukturprosjekt, ~55 mrd DKK). Storebælt/Øresund vedlikehold. 120+ havner. København Nordhavn utvikling.', method:'Fehmarnbelt-prosjekt + bro/tunnel vedlikehold + havneinfrastruktur. Undervannsdel ~8-10%.', submaraRelevance:68, attractiveness:72, note:'Fehmarnbelt tunnelen (2029-ferdig) og bro-vedlikehold er store markeder.' },
+      { name:'Vann & avløp', size:600, growth:5, conf:'Medium', drivers:'DANVA: VA-investeringer ~10 mrd DKK/år. 52 000 km kloakkledning. Københavns skybruddssikring: 10+ mrd DKK. Klimatilpasning driver investering.', method:'DANVA statistikk: 10 mrd DKK/år totalt. Undervannsdel ~5-8%.', submaraRelevance:70, attractiveness:70, note:'Stabil VA-investering. Klimatilpasning i København som stor driver.' },
+      { name:'Survey & ROV', size:300, growth:12, conf:'Low', drivers:'Vindpark-inspeksjon. Dansk kystlinje ~7 300 km. Havbundskartlegging for havvind.', method:'Estimert som ~65% av norsk nivå basert på offshore-aktivitet.', submaraRelevance:72, attractiveness:78, note:'Vindpark-inspeksjon er stort og voksende. ROV-behov.' },
+      { name:'Skip & rigger', size:250, growth:3, conf:'Low', drivers:'Mærsk, DFDS. ~800 danskregistrerte skip. Limfjord/Aalborg verfts-aktivitet.', method:'Estimert fra flåtestørrelse.', submaraRelevance:45, attractiveness:50, note:'Sekundært. Mærsk og DFDS bruker store leverandører.' },
+      { name:'Tunnel / inspeksjon', size:150, growth:8, conf:'Low', drivers:'Storebælt, Øresund, Fehmarnbelt tunneler. Limfjordstunnelen. Begrenset vannkraft men bro/tunnel-behov.', method:'Basert på broinventeringen og tunnelbestand.', submaraRelevance:60, attractiveness:65, note:'Færre tunneler enn Norge/Sverige men store broer.' }
     ]},
-    { country:'UK', flag:'🇬🇧', size:8500, growth:4.0, frag:55, compInt:80, regBar:70, relevance:40, segments:[
-      { name:'Offshore energi', size:3000, growth:5, note:'North Sea, offshore wind, decommissioning' },
-      { name:'Marine anlegg', size:2000, growth:3, note:'Havner, forsvar, infrastruktur' },
-      { name:'Survey & ROV', size:1200, growth:8, note:'Stort og modent marked' },
-      { name:'Vann & avløp', size:1500, growth:4, note:'Regulert marked, store kontrakter' }
+    { country:'UK', flag:'🇬🇧', pop:67.0, size:9500, growth:4.5, frag:55, compInt:80, regBar:70, relevance:40, segments:[
+      { name:'Offshore energi', size:3200, growth:6, conf:'High', drivers:'UK offshore wind: 14 GW installert, 50+ GW pipeline (Crown Estate leases). North Sea Transition Deal. Decommissioning: £1.5bn+/år fra 2030. ScotWind: 25 GW. Celtic Sea floating wind.', method:'OEUK data: £250bn+ committed offshore capex 2024-2030. Subsea services ~5%. Dykker/inspection ~1-2%.', submaraRelevance:55, attractiveness:70, note:'Enormt marked men dominert av Subsea7, TechnipFMC. Niche-muligheter i inspection/maintenance.' },
+      { name:'Marine anlegg', size:2200, growth:3, conf:'Medium', drivers:'£2.5bn National Shipbuilding Strategy. Royal Navy bases. 120+ commercial ports. Thames Tideway (£4.5bn). HS2 marine elements.', method:'Department for Transport + MoD budsjetter. Marint anlegg ~15-20 mrd NOK. Dykkerandel ~10%.', submaraRelevance:45, attractiveness:55, note:'Stort marked men regulatory barriers. Defence/MoD opportunities require security clearance.' },
+      { name:'Survey & ROV', size:1400, growth:8, conf:'Medium', drivers:'North Sea inspection regime (HSE). Offshore wind inspection. BEIS/NSTA decommissioning monitoring. Stort og modent marked med mange etablerte aktører.', method:'Estimert fra OEUK og offshore wind inspection-kontrakter.', submaraRelevance:50, attractiveness:62, note:'Stort ROV-marked men høy konkurranse. Nisjemuligheter i innaskjærs inspeksjon.' },
+      { name:'Vann & avløp', size:1800, growth:5, conf:'High', drivers:'Ofwat AMP8 (2025-2030): £88bn investering. 347 000 km avløpsnett. Storm overflow reduction: £56bn over 25 år. Thames Water krise driver økt investering.', method:'Ofwat AMP8: £88bn / 5 år = ~£17.6bn/år. VA-dykker andel ~1-2% = £176-352M ≈ 2.0-4.0 mrd NOK.', submaraRelevance:50, attractiveness:60, note:'Ofwat AMP8 er massivt. Storm overflow-problemet driver hundrevis av milliarder i investering. Regulert marked.' },
+      { name:'Kabel / offshore vind', size:600, growth:10, conf:'Medium', drivers:'HVDC-kabler: Viking Link, NeuConnect, Xlinks. Inter-array cables for 50+ GW pipeline. Cable protection/burial inspection.', method:'Estimert fra Crown Estate og NGESO offshore transmission budsjetter.', submaraRelevance:55, attractiveness:68, note:'Kabel-segmentet vokser raskest i UK. HVDC-kabler trenger regelmessig inspeksjon.' },
+      { name:'Tunnel / inspeksjon', size:300, growth:5, conf:'Low', drivers:'~700+ tunneler i UK. Crossrail (Elizabeth Line). Thames tunnels. Severn Tunnel (1886). Eldre infrastruktur trenger inspeksjon.', method:'Estimert fra tunnelbestand og TfL/Highways England budsjetter.', submaraRelevance:35, attractiveness:45, note:'Begrenset relevans for Submara i nær fremtid. Langsiktig.' }
     ]}
   ],
 
@@ -546,27 +576,68 @@ function confDot(c){
 }
 function escHtml(t){const d=document.createElement('div');d.appendChild(document.createTextNode(t));return d.innerHTML;}
 
+// ═══════════════════ NICE AXIS SCALING ═══════════════════
+function niceNum(range,round){
+  const exp=Math.floor(Math.log10(range));
+  const frac=range/Math.pow(10,exp);
+  let nice;
+  if(round){
+    if(frac<1.5) nice=1; else if(frac<3) nice=2; else if(frac<7) nice=5; else nice=10;
+  } else {
+    if(frac<=1) nice=1; else if(frac<=2) nice=2; else if(frac<=5) nice=5; else nice=10;
+  }
+  return nice*Math.pow(10,exp);
+}
+function niceScale(minVal,maxVal,maxTicks=5){
+  if(maxVal===minVal){maxVal=minVal+1;}
+  const range=niceNum(maxVal-minVal,false);
+  const tickSpacing=niceNum(range/(maxTicks-1),true);
+  const niceMin=Math.floor(minVal/tickSpacing)*tickSpacing;
+  const niceMax=Math.ceil(maxVal/tickSpacing)*tickSpacing;
+  const ticks=[];
+  for(let v=niceMin;v<=niceMax+tickSpacing*0.01;v+=tickSpacing) ticks.push(parseFloat(v.toPrecision(10)));
+  return {min:niceMin,max:niceMax,ticks,spacing:tickSpacing};
+}
+function truncLabel(text,maxLen=12){
+  if(text.length<=maxLen) return text;
+  return text.substring(0,maxLen-1)+'…';
+}
+function wrapLabel(text,maxLen=14){
+  if(text.length<=maxLen) return [text];
+  const mid=Math.ceil(text.length/2);
+  let split=text.lastIndexOf(' ',mid);
+  if(split<3) split=text.indexOf(' ',mid);
+  if(split<0) return [truncLabel(text,maxLen)];
+  return [text.substring(0,split),text.substring(split+1)];
+}
+
 // ═══════════════════ SVG CHART UTILITIES ═══════════════════
 function svgBar(data,opts={}){
-  const W=opts.w||540, H=opts.h||200, pad={t:20,r:20,b:40,l:50};
+  const W=opts.w||540, H=opts.h||220, pad={t:20,r:20,b:52,l:52};
   const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
-  const n=data.length, bw=Math.min(40,cw/n*.7), gap=(cw-bw*n)/(n+1);
-  const maxVal=opts.max||Math.max(...data.map(d=>d.v))*1.15;
+  const n=data.length, bw=Math.min(44,cw/n*.7), gap=(cw-bw*n)/(n+1);
+  const rawMax=opts.max||Math.max(...data.map(d=>d.v))*1.1;
+  const sc=niceScale(0,rawMax,5);
+  const maxVal=sc.max;
   let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
-  // Grid
-  for(let i=0;i<=4;i++){
-    const y=pad.t+ch-ch*(i/4);
+  // Grid with nice ticks
+  sc.ticks.forEach(tv=>{
+    const y=pad.t+ch-ch*(tv/maxVal);
     svg+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#243050" stroke-width="0.5"/>`;
-    svg+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#4a5a75" font-size="9">${fmt(maxVal*i/4)}</text>`;
-  }
+    svg+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#4a5a75" font-size="9">${fmt(tv)}</text>`;
+  });
   // Bars
   data.forEach((d,i)=>{
     const x=pad.l+gap+(bw+gap)*i;
     const h=Math.max(0,(d.v/maxVal)*ch);
     const y=pad.t+ch-h;
     const col=d.color||opts.color||'#0ea5e9';
-    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="3" fill="${col}" opacity="0.85"><title>${d.l}: ${fmt(d.v,1)}</title></rect>`;
-    svg+=`<text x="${x+bw/2}" y="${H-pad.b+14}" text-anchor="middle" fill="#7a8ba8" font-size="8" transform="rotate(-30 ${x+bw/2} ${H-pad.b+14})">${d.l}</text>`;
+    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="3" fill="${col}" opacity="0.85"><title>${escHtml(d.l)}: ${fmt(d.v,1)}</title></rect>`;
+    // Horizontal labels with wrapping
+    const lines=wrapLabel(d.l,13);
+    lines.forEach((ln,li)=>{
+      svg+=`<text x="${x+bw/2}" y="${H-pad.b+13+li*11}" text-anchor="middle" fill="#7a8ba8" font-size="8"><title>${escHtml(d.l)}</title>${escHtml(truncLabel(ln,14))}</text>`;
+    });
     if(d.v>0) svg+=`<text x="${x+bw/2}" y="${y-4}" text-anchor="middle" fill="#e2e8f0" font-size="8" font-weight="700">${fmt(d.v,1)}</text>`;
   });
   svg+='</svg>';
@@ -574,31 +645,35 @@ function svgBar(data,opts={}){
 }
 
 function svgWaterfall(data,opts={}){
-  const W=opts.w||600, H=opts.h||220, pad={t:25,r:20,b:45,l:50};
+  const W=opts.w||600, H=opts.h||240, pad={t:25,r:20,b:52,l:52};
   const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
   const n=data.length, bw=Math.min(38,cw/n*.75), gap=(cw-bw*n)/(n+1);
-  let maxVal=0, running=0; const bases=[], heights=[];
+  let rawMax=0, running=0; const bases=[], heights=[];
   data.forEach((d,i)=>{
     if(i===0||i===data.length-1){ bases.push(0); heights.push(d.v); }
     else { bases.push(running); heights.push(d.v); }
     if(i===0) running=d.v; else if(i<data.length-1) running+=d.v;
-    maxVal=Math.max(maxVal,running,d.v);
+    rawMax=Math.max(rawMax,running,d.v);
   });
-  maxVal*=1.2;
+  const sc=niceScale(0,rawMax*1.1,5);
+  const maxVal=sc.max;
   let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
-  for(let i=0;i<=4;i++){
-    const y=pad.t+ch-ch*(i/4);
+  sc.ticks.forEach(tv=>{
+    const y=pad.t+ch-ch*(tv/maxVal);
     svg+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#243050" stroke-width="0.5"/>`;
-    svg+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#4a5a75" font-size="9">${fmt(maxVal*i/4)}</text>`;
-  }
+    svg+=`<text x="${pad.l-6}" y="${y+4}" text-anchor="end" fill="#4a5a75" font-size="9">${fmt(tv)}</text>`;
+  });
   data.forEach((d,i)=>{
     const x=pad.l+gap+(bw+gap)*i;
     const base=bases[i], h=heights[i];
     const barH=Math.max(0,(Math.abs(h)/maxVal)*ch);
     const barBase=(base/maxVal)*ch;
     const y=pad.t+ch-barBase-barH;
-    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${barH}" rx="2" fill="${d.color||'#0ea5e9'}" opacity="0.85"><title>${d.l}: ${fmt(h,1)} MNOK</title></rect>`;
-    svg+=`<text x="${x+bw/2}" y="${H-pad.b+14}" text-anchor="middle" fill="#7a8ba8" font-size="7" transform="rotate(-35 ${x+bw/2} ${H-pad.b+14})">${d.l}</text>`;
+    svg+=`<rect x="${x}" y="${y}" width="${bw}" height="${barH}" rx="2" fill="${d.color||'#0ea5e9'}" opacity="0.85"><title>${escHtml(d.l)}: ${fmt(h,1)} MNOK</title></rect>`;
+    const lines=wrapLabel(d.l,11);
+    lines.forEach((ln,li)=>{
+      svg+=`<text x="${x+bw/2}" y="${H-pad.b+13+li*10}" text-anchor="middle" fill="#7a8ba8" font-size="7"><title>${escHtml(d.l)}</title>${escHtml(truncLabel(ln,12))}</text>`;
+    });
     if(Math.abs(h)>0.5) svg+=`<text x="${x+bw/2}" y="${y-3}" text-anchor="middle" fill="#e2e8f0" font-size="7" font-weight="700">${h>0?'+':''}${fmt(h,1)}</text>`;
   });
   svg+='</svg>';
@@ -606,18 +681,20 @@ function svgWaterfall(data,opts={}){
 }
 
 function svgLine(series,labels,opts={}){
-  const W=opts.w||400, H=opts.h||160, pad={t:15,r:15,b:30,l:45};
+  const W=opts.w||400, H=opts.h||160, pad={t:15,r:15,b:30,l:50};
   const cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
   let allVals=[]; series.forEach(s=>allVals=allVals.concat(s.data));
-  const minV=opts.min!=null?opts.min:Math.min(...allVals)*.9;
-  const maxV=Math.max(...allVals)*1.1;
+  const rawMin=opts.min!=null?opts.min:Math.min(...allVals)*.9;
+  const rawMax=Math.max(...allVals)*1.1;
+  const sc=niceScale(rawMin,rawMax,4);
+  const minV=sc.min, maxV=sc.max;
   const n=labels.length;
   let svg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">`;
-  for(let i=0;i<=3;i++){
-    const y=pad.t+ch-ch*(i/3);
+  sc.ticks.forEach(tv=>{
+    const y=pad.t+ch-((tv-minV)/(maxV-minV))*ch;
     svg+=`<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#243050" stroke-width="0.5"/>`;
-    svg+=`<text x="${pad.l-6}" y="${y+3}" text-anchor="end" fill="#4a5a75" font-size="8">${fmt(minV+(maxV-minV)*(i/3),0)}</text>`;
-  }
+    svg+=`<text x="${pad.l-6}" y="${y+3}" text-anchor="end" fill="#4a5a75" font-size="8">${fmt(tv,0)}</text>`;
+  });
   labels.forEach((l,i)=>{
     const x=pad.l+(cw/(n-1))*i;
     svg+=`<text x="${x}" y="${H-pad.b+14}" text-anchor="middle" fill="#7a8ba8" font-size="8">${l}</text>`;
@@ -829,20 +906,23 @@ function buildMapSVG(highlights={}){
   const labels=[{t:'NORGE',p:[9,64.5]},{t:'SVERIGE',p:[17,63]},{t:'FINLAND',p:[27,64]},{t:'DANMARK',p:[10.2,56.3]},{t:'UK',p:[-1,53.5]}];
   labels.forEach(l=>{const[x,y]=proj(l.p[0],l.p[1]);svg+=`<text x="${x}" y="${y}" text-anchor="middle" fill="#2a3e5a" font-size="11" font-weight="700" letter-spacing="3">${l.t}</text>`;});
 
-  // Portfolio companies (blue dots)
+  // Portfolio companies (blue pulsing dots)
   D.companies.forEach(c=>{
     const[x,y]=proj(c.lon,c.lat);
     const selected=highlights.selected===c.id;
-    svg+=`<circle cx="${x}" cy="${y}" r="${selected?8:5}" fill="#0ea5e9" stroke="#0a0f1a" stroke-width="1.5" opacity="${selected?1:.8}" style="cursor:pointer" onclick="openDetail('${c.id}')"><title>${c.brand}: ${latestRev(c)} MNOK</title></circle>`;
-    if(selected||latestRev(c)>50) svg+=`<text x="${x+8}" y="${y+3}" fill="#7a8ba8" font-size="8">${c.brand}</text>`;
+    const r=selected?8:Math.max(4,Math.min(7,latestRev(c)/35));
+    svg+=`<circle cx="${x}" cy="${y}" r="${r+2}" fill="#0ea5e9" opacity="0.15"/>`;
+    svg+=`<circle cx="${x}" cy="${y}" r="${r}" fill="#0ea5e9" stroke="#0a0f1a" stroke-width="1.5" opacity="${selected?1:.85}" style="cursor:pointer" onclick="openDetail('${c.id}')"><title>${c.brand}: ${latestRev(c)} MNOK rev (${c.emp} ansatte)</title></circle>`;
+    if(selected||latestRev(c)>30) svg+=`<text x="${x+r+3}" y="${y+3}" fill="#94a3b8" font-size="7" font-weight="600">${c.brand}</text>`;
   });
 
-  // M&A targets (colored squares)
+  // M&A targets (colored diamonds)
   if(highlights.showMA){
     D.maTargets.forEach(t=>{
       const[x,y]=proj(t.lon,t.lat);
       const col=t.rec==='Prioritize'?'#10b981':t.rec==='Engage'?'#f59e0b':'#4a5a75';
-      svg+=`<rect x="${x-4}" y="${y-4}" width="8" height="8" rx="2" fill="${col}" stroke="#0a0f1a" stroke-width="1" opacity="0.8" style="cursor:pointer" onclick="selectMA('${t.id}')"><title>${t.name} (${t.country}) - ${t.rec}</title></rect>`;
+      const sz=t.rec==='Prioritize'?5:t.rec==='Engage'?4:3;
+      svg+=`<g style="cursor:pointer" onclick="selectMA('${t.id}')"><rect x="${x-sz}" y="${y-sz}" width="${sz*2}" height="${sz*2}" rx="2" fill="${col}" stroke="#0a0f1a" stroke-width="1" opacity="0.85" transform="rotate(45 ${x} ${y})"><title>${t.name} (${t.country}) · ${t.segment} · ${t.rec} · ~${t.estRev}M</title></rect></g>`;
     });
   }
   svg+='</svg>';
@@ -919,10 +999,11 @@ function renderOverview(){
   // Revenue chart
   h+=`<div class="card"><div class="card-header"><h3>Omsetning etter selskap (2024, MNOK)</h3><button class="export-btn" onclick="exportCSV('revenue')">↓ CSV</button></div>`;
   const barData=D.companies.sort((a,b)=>latestRev(b)-latestRev(a)).map(c=>({l:c.brand,v:latestRev(c),color:c.status==='Scale'?'#0ea5e9':c.status==='Improve'?'#f59e0b':'#ef4444'}));
-  h+=`<div class="chart-wrap">${svgBar(barData,{w:750,h:220})}</div></div>`;
+  h+=`<div class="chart-wrap">${svgBar(barData,{w:800,h:250})}</div></div>`;
 
   // Platform revenue trend
   h+=`<div class="card"><div class="card-header"><h3>Plattform — omsetning og EBITDA utvikling</h3></div>`;
+  h+=`<div class="fs-xs text-muted mb-8">Aggregert portefølje | Kilde: Proff.no (2024), estimert historikk</div>`;
   const years=D.companies[0].fin.years;
   const totRevByYear=years.map((_,i)=>D.companies.reduce((s,c)=>s+c.fin.rev[i],0));
   const totEbitdaByYear=years.map((_,i)=>D.companies.reduce((s,c)=>s+c.fin.ebitda[i],0));
@@ -1248,28 +1329,39 @@ function renderView2(){
 }
 
 function renderMapMA(){
-  let h=`<div class="section-title">Nord-Europa — Kart & M&A Pipeline</div>`;
+  const noCount=D.maTargets.filter(t=>t.country==='NO').length;
+  const seCount=D.maTargets.filter(t=>t.country==='SE').length;
+  const dkCount=D.maTargets.filter(t=>t.country==='DK').length;
+  const ukCount=D.maTargets.filter(t=>t.country==='UK').length;
+  let h=`<div class="section-title">Nord-Europa — Kart & M&A Pipeline <span class="badge">${D.maTargets.length} kandidater</span></div>`;
   h+=`<div style="display:grid;grid-template-columns:1fr 380px;gap:16px;">`;
 
   // Map
   h+=`<div class="map-container" style="position:relative">${buildMapSVG({showMA:true})}
     <div class="map-legend">
-      <div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div>Eksisterende portefølje</div>
+      <div class="leg-item"><div class="leg-dot" style="background:var(--accent)"></div>Eksisterende (${D.companies.length})</div>
       <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Prioritize</div>
       <div class="leg-item"><div class="leg-dot" style="background:var(--amber)"></div>Engage</div>
       <div class="leg-item"><div class="leg-dot" style="background:var(--text-dim);border-radius:2px"></div>Track</div>
+      <div style="margin-top:4px;font-size:10px;color:var(--text-dim)">🇳🇴${noCount} · 🇸🇪${seCount} · 🇩🇰${dkCount} · 🇬🇧${ukCount}</div>
     </div>
   </div>`;
 
   // M&A Pipeline
   h+=`<div style="overflow-y:auto;max-height:700px">`;
-  h+=`<div class="card"><h3 class="mb-8">M&A Pipeline</h3><div class="fs-xs text-muted mb-16">${D.maTargets.length} identifiserte kandidater</div>`;
+  h+=`<div class="card"><h3 class="mb-8">M&A Pipeline</h3><div class="fs-xs text-muted mb-8">${D.maTargets.length} identifiserte kandidater i 4 markeder</div>`;
+  h+=`<div class="flex gap-8 mb-16 flex-wrap">`;
+  h+=`<span class="fs-xs" style="color:var(--green);font-weight:700">${D.maTargets.filter(t=>t.rec==='Prioritize').length} Prioritize</span>`;
+  h+=`<span class="fs-xs" style="color:var(--amber);font-weight:700">${D.maTargets.filter(t=>t.rec==='Engage').length} Engage</span>`;
+  h+=`<span class="fs-xs" style="color:var(--text-dim);font-weight:700">${D.maTargets.filter(t=>t.rec==='Track').length} Track</span>`;
+  h+=`</div>`;
   D.maTargets.sort((a,b)=>{const o={Prioritize:0,Engage:1,Track:2,Pass:3};return(o[a.rec]||9)-(o[b.rec]||9);}).forEach(t=>{
     const recCol=t.rec==='Prioritize'?'var(--green)':t.rec==='Engage'?'var(--amber)':'var(--text-dim)';
     const avgFit=Math.round((t.fit.strat+t.fit.comm+t.fit.ops+t.fit.geo)/4);
-    h+=`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:var(--transition)" onmouseenter="this.style.borderColor='var(--border-light)'" onmouseleave="this.style.borderColor='var(--border)'" onclick="selectMA('${t.id}')">
-      <div class="flex justify-between items-center"><span class="fw-800 fs-sm">${t.name}</span><span class="hm-cell" style="background:${recCol}22;color:${recCol}">${t.rec}</span></div>
-      <div class="flex gap-8 mt-8 fs-xs text-muted"><span>${t.country==='NO'?'🇳🇴':t.country==='SE'?'🇸🇪':t.country==='DK'?'🇩🇰':'🇬🇧'} ${t.loc}</span><span>~${t.estRev}M rev</span><span>Fit: ${avgFit}%</span></div>
+    const flag=t.country==='NO'?'🇳🇴':t.country==='SE'?'🇸🇪':t.country==='DK'?'🇩🇰':'🇬🇧';
+    h+=`<div style="border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:6px;cursor:pointer;transition:var(--transition)" onmouseenter="this.style.borderColor='var(--border-light)'" onmouseleave="this.style.borderColor='var(--border)'" onclick="selectMA('${t.id}')">
+      <div class="flex justify-between items-center"><span class="fw-800" style="font-size:12px">${truncLabel(t.name,24)}</span><span class="hm-cell" style="background:${recCol}22;color:${recCol};font-size:10px">${t.rec}</span></div>
+      <div class="flex gap-8 mt-8 fs-xs text-muted"><span>${flag} ${t.loc}</span><span>~${t.estRev}M</span><span>${t.segment}</span><span>Fit: ${avgFit}%</span></div>
     </div>`;
   });
   h+=`</div></div></div>`;
@@ -1306,15 +1398,21 @@ function renderScreeningResults(){
     return {...t,score};
   }).sort((a,b)=>b.score-a.score);
 
-  let h=`<h3 class="mb-8">Rangerte kandidater</h3><div class="fs-xs text-muted mb-16">Basert på vektet scoring</div>`;
+  let h=`<h3 class="mb-8">Rangerte kandidater <span class="badge">${scored.length} totalt</span></h3>`;
+  h+=`<div class="flex gap-8 mb-8">`;
+  h+=`<span class="fs-xs text-muted">🇳🇴 ${scored.filter(t=>t.country==='NO').length} · 🇸🇪 ${scored.filter(t=>t.country==='SE').length} · 🇩🇰 ${scored.filter(t=>t.country==='DK').length} · 🇬🇧 ${scored.filter(t=>t.country==='UK').length}</span>`;
+  h+=`</div>`;
   scored.forEach((t,i)=>{
     const col=t.score>75?'var(--green)':t.score>60?'var(--amber)':'var(--text-dim)';
-    h+=`<div class="tracker-row">
-      <span class="fw-800" style="width:20px;text-align:center">${i+1}</span>
-      <span style="flex:1;font-weight:600;font-size:12px">${t.name}</span>
-      <span class="fs-xs text-muted">${t.country}</span>
+    const flag=t.country==='NO'?'🇳🇴':t.country==='SE'?'🇸🇪':t.country==='DK'?'🇩🇰':'🇬🇧';
+    const confCol=t.dataConf==='High'?'var(--green)':t.dataConf==='Medium'?'var(--amber)':'var(--text-dim)';
+    h+=`<div class="tracker-row" style="cursor:pointer" onclick="selectMA('${t.id}')">
+      <span class="fw-800" style="width:20px;text-align:center;color:var(--text-dim)">${i+1}</span>
+      <span style="font-size:12px">${flag}</span>
+      <div style="flex:1"><span style="font-weight:600;font-size:12px">${truncLabel(t.name,22)}</span><div class="fs-xs text-dim">${t.segment} · ~${t.estRev}M</div></div>
+      <span class="fs-xs" style="color:${confCol}" data-tip="Data: ${t.dataConf||'Low'}">●</span>
       <div class="progress-bar"><div class="progress-fill" style="width:${t.score}%;background:${col}"></div></div>
-      <span class="fw-800 fs-sm" style="color:${col};min-width:35px;text-align:right">${t.score.toFixed(0)}</span>
+      <span class="fw-800 fs-sm" style="color:${col};min-width:30px;text-align:right">${t.score.toFixed(0)}</span>
     </div>`;
   });
   return h;
@@ -1333,12 +1431,13 @@ function resetWeights(){
 }
 
 function renderMarkets(){
-  let h=`<div class="section-title">Markedsattraktivitet — per land og segment</div>`;
+  let h=`<div class="section-title">Markedsattraktivitet — per land og segment <span class="badge">Dybdeanalyse</span></div>`;
   // Country cards
   h+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">`;
   D.markets.forEach(m=>{
-    h+=`<div class="card" style="margin:0"><div class="flex items-center gap-8 mb-8"><span style="font-size:24px">${m.flag}</span><span class="fw-800">${m.country}</span></div>
-      <div class="fs-xs text-muted mb-8">Markedsstørrelse (proxy)</div><div class="fw-800 text-accent mb-8">${fmt(m.size)} MNOK</div>
+    const totalSeg=m.segments.reduce((s,sg)=>s+sg.size,0);
+    h+=`<div class="card" style="margin:0"><div class="flex items-center gap-8 mb-8"><span style="font-size:24px">${m.flag}</span><div><span class="fw-800">${m.country}</span><div class="fs-xs text-dim">${m.pop} mill. innbyggere</div></div></div>
+      <div class="fs-xs text-muted mb-8">Estimert adresserbart marked</div><div class="fw-800 text-accent mb-8">${fmt(totalSeg)} MNOK</div>
       <div class="score-bar"><div class="sbl">Vekst</div><div class="sb-track"><div class="sb-fill" style="width:${m.growth*8}%;background:var(--green)"></div></div><div class="sb-val">${m.growth}%</div></div>
       <div class="score-bar"><div class="sbl">Fragmentering</div><div class="sb-track"><div class="sb-fill" style="width:${m.frag}%;background:var(--accent)"></div></div><div class="sb-val">${m.frag}</div></div>
       <div class="score-bar"><div class="sbl">Relevans</div><div class="sb-track"><div class="sb-fill" style="width:${m.relevance}%;background:var(--amber)"></div></div><div class="sb-val">${m.relevance}</div></div>
@@ -1346,32 +1445,58 @@ function renderMarkets(){
   });
   h+=`</div>`;
 
-  // Segment detail per country
-  h+=`<div class="card"><div class="card-header"><h3>Segmenter per land</h3><button class="export-btn" onclick="exportCSV('markets')">↓ CSV</button></div>`;
-  h+=`<table class="hm-table"><thead><tr><th>Land</th><th>Segment</th><th>Størrelse (MNOK)</th><th>Vekst</th><th>Kommentar</th></tr></thead><tbody>`;
+  // Segment detail per country — enhanced
+  h+=`<div class="card"><div class="card-header"><h3>Segmenter per land — detaljert analyse</h3><button class="export-btn" onclick="exportCSV('markets')">↓ CSV</button></div>`;
+  h+=`<table class="hm-table"><thead><tr><th>Land</th><th>Segment</th><th>Est. størrelse</th><th>Vekst</th><th>Conf.</th><th>Relevans</th><th>Attraktivitet</th><th>Drivere / metode</th></tr></thead><tbody>`;
   D.markets.forEach(m=>{
     m.segments.forEach((s,i)=>{
-      h+=`<tr><td>${i===0?m.flag+' '+m.country:''}</td><td class="fw-800">${s.name}</td>
-        <td><span class="hm-cell" style="background:${heatColor(s.size,200,3000)}22;color:${heatColor(s.size,200,3000)}">${fmt(s.size)}</span></td>
+      const confCol=s.conf==='High'?'var(--green)':s.conf==='Medium'?'var(--amber)':'var(--text-dim)';
+      const relScore=s.submaraRelevance||70;
+      const attrScore=s.attractiveness||70;
+      h+=`<tr><td>${i===0?m.flag+' <strong>'+m.country+'</strong>':''}</td><td class="fw-800">${s.name}</td>
+        <td><span class="hm-cell" style="background:${heatColor(s.size,150,3200)}22;color:${heatColor(s.size,150,3200)}">${fmt(s.size)}</span></td>
         <td><span class="hm-cell" style="background:${heatColor(s.growth,3,15)}22;color:${heatColor(s.growth,3,15)}">${s.growth}%</span></td>
-        <td class="text-muted fs-xs">${s.note}</td></tr>`;
+        <td style="font-size:10px;color:${confCol};font-weight:600">${s.conf||'Low'}</td>
+        <td><span class="hm-cell" style="background:${heatColor(relScore,30,95)}22;color:${heatColor(relScore,30,95)}">${relScore}</span></td>
+        <td><span class="hm-cell" style="background:${heatColor(attrScore,30,95)}22;color:${heatColor(attrScore,30,95)}">${attrScore}</span></td>
+        <td class="text-muted" style="font-size:10px;max-width:300px;white-space:normal;line-height:1.4" data-tip="${escHtml(s.method||s.drivers||'')}">${s.note||s.drivers||''}</td></tr>`;
     });
   });
-  h+=`</tbody></table></div>`;
+  h+=`</tbody></table>`;
+  h+=`<div class="fs-xs text-dim mt-8">Conf. = data confidence (High/Medium/Low). Relevans og attraktivitet: 0-100 score. Hover over drivere for estimeringsmetode.</div>`;
+  h+=`</div>`;
+
+  // Methodology card
+  h+=`<div class="card" style="border-color:var(--accent)"><div class="card-header"><h3 class="text-accent">📐 Estimeringsmetodikk</h3></div>
+    <div class="grid-2">
+      <div><div class="fw-800 fs-sm mb-8">Top-down tilnærming</div><div class="fs-xs text-muted">
+        1. Identifiser total offentlig investering (NTP, Statsbudsjett, Ofwat AMP)<br>
+        2. Estimer underkategori relevant for undervannstjenester (~10-15% av VA, ~5-8% av kabel)<br>
+        3. Juster for dykkerspesifikk andel (~30-50% av undervannsarbeid)<br>
+        4. Kryss-sjekk med bottom-up fra bransjeaktørers omsetning</div></div>
+      <div><div class="fw-800 fs-sm mb-8">Bottom-up proxyer</div><div class="fs-xs text-muted">
+        <strong>VA:</strong> km ledningsnett × fornyelsesrate × enhetskostnad<br>
+        <strong>Kabel:</strong> GW pipeline × kabelkostnad × inspeksjonssyklus<br>
+        <strong>Marine:</strong> antall havner × vedlikeholdsbudsjett × dykkerandel<br>
+        <strong>Survey:</strong> antall tunneler/dammer × inspeksjonskostnad<br>
+        <strong>Skip:</strong> flåtestørrelse × inspeksjonsfrekvens × enhetspris</div></div>
+    </div></div>`;
 
   // Market drivers
-  h+=`<div class="card"><div class="card-header"><h3>Nøkkeldrivere</h3></div>`;
+  h+=`<div class="card"><div class="card-header"><h3>Nøkkeldrivere — rangert etter styrke</h3></div>`;
   const drivers=[
-    {name:'VA-vedlikeholdsetterslep',desc:'300+ mrd NOK over 20 år i Norge alene. Tilsvarende i Sverige.',icon:'💧',strength:95},
-    {name:'Offshore vind / elektrifisering',desc:'Massiv vekst i sjøkabler og undervannsinfrastruktur i Nordsjøen og Østersjøen.',icon:'⚡',strength:88},
-    {name:'Tunneler & kraftverk — inspeksjon',desc:'Stort etterslep på inspeksjon av vannkrafttunneler. NTI-teknologi er differensiator.',icon:'🔍',strength:82},
-    {name:'Regulering & sikkerhetskrav',desc:'Strengere krav til dokumentasjon, kvalitet og sikkerhet favoriserer profesjonelle aktører.',icon:'🛡️',strength:78},
-    {name:'Kommunal/offentlig infrastruktur',desc:'Havner, kaier, broer, daminfrastruktur — stort vedlikeholdsbehov.',icon:'🏗️',strength:75},
-    {name:'Digitalisering (survey, fotogrammetri)',desc:'ROV, multibeam, 3D-modellering. Økt etterspørsel etter digital dokumentasjon.',icon:'📡',strength:72},
+    {name:'VA-vedlikeholdsetterslep',desc:'Norge: 332 mrd NOK / 20 år (Norsk Vann 2023). Sverige: 200+ mrd SEK (Svenskt Vatten). UK: £88bn AMP8. Eldste nett 80-100 år, lekkasjerate 25-30%.',icon:'💧',strength:95},
+    {name:'Offshore vind / elektrifisering',desc:'Nordsjøen: 300+ GW prosjektpipeline. UK 50 GW, DK 12.9 GW, SE 4+ GW, NO 30 GW mål. Kabelinstallasjon og inspeksjon vokser 15-20%/år.',icon:'⚡',strength:90},
+    {name:'Tunneler & kraftverk — inspeksjon',desc:'Norge: 4 300 km vannkrafttunneler + 1 200 vegtunneler. NVEs 5-15 års re-inspeksjonskrav. NTI 15km ROV er unik.',icon:'🔍',strength:85},
+    {name:'Klimatilpasning & flomvern',desc:'Økt nedbør, stigende havnivå. Københavns skybruddssikring: 10 mrd DKK. Britiske flomvern-investeringer øker med 40%.',icon:'🌊',strength:80},
+    {name:'Regulering & sikkerhetskrav',desc:'SOA, IMCA, NS-EN krav. Strengere dokumentasjon og sporbarhet. Favoriserer profesjonelle plattformer som Submara.',icon:'🛡️',strength:78},
+    {name:'Kommunal infrastruktur',desc:'120+ havner i Norge, 52 i Sverige, 120+ i UK. 18 500 veibroer i Norge. Vedlikeholdsetterslep driver stabil etterspørsel.',icon:'🏗️',strength:76},
+    {name:'NATO / forsvar',desc:'Sverige NATO-medlem 2024. Økt forsvarsbudsjett: ubåtsbaser, havneinfrastruktur, undervannssensorer. UK AUKUS program.',icon:'🎖️',strength:70},
+    {name:'Digitalisering (ROV, 3D)',desc:'ROV, multibeam, fotogrammetri erstatter manuell inspeksjon. Digital twin-etterspørsel. Submara Survey posisjonert.',icon:'📡',strength:72},
   ];
   drivers.forEach(d=>{
     h+=`<div class="tracker-row"><span style="font-size:18px">${d.icon}</span><div style="flex:1"><div class="fw-800 fs-sm">${d.name}</div><div class="fs-xs text-muted">${d.desc}</div></div>
-      <div class="progress-bar" style="max-width:80px"><div class="progress-fill" style="width:${d.strength}%;background:var(--accent)"></div></div></div>`;
+      <div class="progress-bar" style="max-width:80px"><div class="progress-fill" style="width:${d.strength}%;background:var(--accent)"></div></div><span class="fs-xs fw-800 text-muted" style="min-width:24px;text-align:right">${d.strength}</span></div>`;
   });
   h+=`</div>`;
   return h;
@@ -1524,14 +1649,23 @@ function selectMA(id){
   const p=document.getElementById('detailPanel');
   const dc=document.getElementById('detailContent');
   const avgFit=Math.round((t.fit.strat+t.fit.comm+t.fit.ops+t.fit.geo)/4);
-  let h=`<h2 class="mb-8">${t.name}</h2><div class="fs-xs text-muted mb-16">${t.loc}, ${t.country} · ${t.segment} · ~${t.estEmp} ansatte · ${confDot(t.conf)}${t.conf}</div>`;
+  const flag=t.country==='NO'?'🇳🇴':t.country==='SE'?'🇸🇪':t.country==='DK'?'🇩🇰':'🇬🇧';
+  let h=`<h2 class="mb-8">${t.name}</h2><div class="fs-xs text-muted mb-8">${flag} ${t.loc}${t.region?', '+t.region:''} · ${t.segment}</div>`;
+  h+=`<div class="fs-xs text-muted mb-16">~${t.estEmp} ansatte · ${confDot(t.conf)}${t.conf} · Kompleksitet: ${t.complexity}</div>`;
   h+=`<div class="flex gap-8 mb-16">`;
-  const recCol=t.rec==='Prioritize'?'tag-scale':t.rec==='Engage'?'tag-improve':'';
-  h+=`<span class="hm-cell ${recCol}">${t.rec}</span></div>`;
+  const recCol=t.rec==='Prioritize'?'tag-scale':t.rec==='Engage'?'tag-improve':t.rec==='Pass'?'tag-fix':'';
+  h+=`<span class="hm-cell ${recCol}">${t.rec}</span>`;
+  const confC=t.dataConf==='High'?'var(--green)':t.dataConf==='Medium'?'var(--amber)':'var(--text-dim)';
+  h+=`<span class="hm-cell" style="background:${confC}22;color:${confC}">Data: ${t.dataConf||'Low'}</span>`;
+  h+=`</div>`;
+
   h+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
     <div class="card" style="margin:0;padding:10px"><div class="kl">Est. Revenue</div><div class="kv" style="font-size:18px">${t.estRev}</div><div class="ksub">MNOK</div></div>
     <div class="card" style="margin:0;padding:10px"><div class="kl">Overall Fit</div><div class="kv" style="font-size:18px;color:var(--accent)">${avgFit}%</div></div>
   </div>`;
+
+  // Description
+  if(t.desc) h+=`<div class="card" style="padding:12px"><div class="fs-xs text-muted">${t.desc}</div></div>`;
 
   // Fit breakdown
   h+=`<div class="card"><h3 class="mb-8" style="font-size:13px">Fit-profil</h3>`;
@@ -1545,8 +1679,14 @@ function selectMA(id){
     <div class="chart-wrap">${svgRadar(['Strat','Komm','Ops','Geo','Synergi'],
       [{data:[t.fit.strat,t.fit.comm,t.fit.ops,t.fit.geo,t.synergy],color:'#10b981'}],{w:440,h:260})}</div></div>`;
 
-  h+=`<div class="card"><div class="fs-xs text-muted">${t.note}</div></div>`;
-  h+=`<div class="card" style="border-color:var(--amber)"><div class="fs-xs text-amber fw-800 mb-8">📋 Datakilde: ${t.conf}</div><div class="fs-xs text-muted">Kandidaten er identifisert basert på segmentanalyse og geografisk mapping. Finansielle estimater er basert på typiske nøkkeltall for selskaper av denne størrelsen i segmentet.</div></div>`;
+  h+=`<div class="card"><div class="fw-800 fs-xs mb-8">Strategisk vurdering</div><div class="fs-xs text-muted">${t.note}</div></div>`;
+
+  // Enhanced data source section
+  h+=`<div class="card" style="border-color:var(--amber)"><div class="fs-xs text-amber fw-800 mb-8">📋 Datakilde & metode</div>
+    <div class="fs-xs text-muted mb-8"><strong>Kilde:</strong> ${t.source||'Segmentanalyse og geografisk mapping'}</div>
+    <div class="fs-xs text-muted mb-8"><strong>Størrelsesproxy:</strong> ${t.sizeProxy||'Estimert fra ansatte og typisk omsetning/ansatt'}</div>
+    <div class="fs-xs text-muted"><strong>Confidence:</strong> ${t.conf} — ${t.dataConf==='High'?'Offentlig data tilgjengelig':t.dataConf==='Medium'?'Delvis verifisert':'Illustrativt estimat'}</div>
+  </div>`;
 
   dc.innerHTML=h;
   p.classList.add('open');
@@ -1564,12 +1704,19 @@ function openDataModal(){
       <li><strong>Brønnøysundregistrene</strong> — selskapsstruktur, eierskap (via Proff.no)</li>
     </ul></div>
     <div><h3 class="mb-8">Sekundærkilder</h3><ul class="fs-sm text-muted" style="list-style:disc;padding-left:16px">
-      <li><strong>Norsk Vann</strong> — VA-vedlikeholdsetterslep (300+ mrd NOK)</li>
+      <li><strong>Norsk Vann (2023)</strong> — VA-vedlikeholdsetterslep: 332 mrd NOK over 20 år</li>
+      <li><strong>Svenskt Vatten (2022)</strong> — 200+ mrd SEK VA-investeringsbehov</li>
+      <li><strong>DANVA</strong> — Dansk VA-statistikk, 10 mrd DKK/år</li>
+      <li><strong>Ofwat AMP8</strong> — UK vannsektoren: £88bn over 2025-2030</li>
       <li><strong>NVE / Statens vegvesen</strong> — infrastrukturbehov tunneler, dammer</li>
+      <li><strong>Statnett investeringsplan</strong> — sjøkabel og nettforsterkninger</li>
+      <li><strong>SvK (Svenska kraftnät)</strong> — svensk nettinvestering</li>
+      <li><strong>Danish Energy Agency</strong> — offshore vind-tall</li>
+      <li><strong>Crown Estate / NSTA</strong> — UK offshore wind leases</li>
       <li><strong>Bransjeerfaring</strong> — typiske nøkkeltall for prosjektbasert dykkertjeneste</li>
     </ul></div>
   </div>`;
-  h+=`<h3 class="mb-8">Dataklassifisering per selskap</h3>`;
+  h+=`<h3 class="mb-8">Dataklassifisering per porteføljeselskap</h3>`;
   h+=`<table class="hm-table"><thead><tr><th>Selskap</th><th>Revenue</th><th>EBITDA</th><th>KPIer</th><th>Kommentar</th></tr></thead><tbody>`;
   D.companies.forEach(c=>{
     h+=`<tr><td class="fw-800">${c.brand}</td>
@@ -1579,13 +1726,27 @@ function openDataModal(){
       <td class="fs-xs text-muted">${c.confNote}</td></tr>`;
   });
   h+=`</tbody></table>`;
+
+  h+=`<h3 class="mb-8 mt-16">Dataklassifisering: markedsestimater</h3>`;
+  h+=`<table class="hm-table"><thead><tr><th>Land</th><th>Segment</th><th>Conf.</th><th>Metode</th></tr></thead><tbody>`;
+  D.markets.forEach(m=>{
+    m.segments.forEach((s,i)=>{
+      const confCol=s.conf==='High'?'var(--green)':s.conf==='Medium'?'var(--amber)':'var(--text-dim)';
+      h+=`<tr><td>${i===0?m.flag+' '+m.country:''}</td><td class="fw-800">${s.name}</td>
+        <td style="color:${confCol};font-weight:600">${s.conf||'Low'}</td>
+        <td class="fs-xs text-muted" style="white-space:normal;max-width:400px;line-height:1.4">${s.method||s.drivers||'Estimert fra bransjedata'}</td></tr>`;
+    });
+  });
+  h+=`</tbody></table>`;
+
   h+=`<div class="card mt-16" style="border-color:var(--amber)"><h3 class="text-amber mb-8">⚠️ Viktige forbehold</h3>
     <ul class="fs-sm text-muted" style="list-style:disc;padding-left:16px">
       <li>EBITDA-tall er <strong>estimerte</strong> basert på typiske marginer for innaskjærs dykkertjenester (5-10%)</li>
       <li>KPI-er (utnyttelse, hit rate, backlog, etc.) er <strong>modellerte</strong> basert på bransjebenchmarks og Scale/Improve/Fix-klassifisering</li>
       <li>Historiske tall (2020-2023) er <strong>bakover-estimert</strong> fra bekreftet 2024-tall med antatt vekstrate</li>
-      <li>M&A-kandidater er basert på segmentanalyse — finansielle data er <strong>illustrative</strong></li>
-      <li>Markedsstørrelser er <strong>proxy-estimater</strong> basert på offentlige kilder og bransjeerfaring</li>
+      <li>M&A-kandidater: de fleste er <strong>illustrative</strong> og basert på segmentanalyse; kun Briggs Marine har offentlig tilgjengelig data</li>
+      <li>Markedsstørrelser er <strong>proxy-estimater</strong> bygget bottom-up fra infrastrukturdata; se metodikk-kort under Markeder</li>
+      <li>VA-estimater for Norge har <strong>høy</strong> confidence (Norsk Vann data), mens UK/Sverige/Danmark er <strong>medium</strong></li>
     </ul></div>`;
   h+=`<div class="fs-xs text-dim mt-16">Datainnsamling utført mars 2026. Verktøyet er en prototype — data bør verifiseres mot faktisk interndata før beslutninger.</div>`;
   dc.innerHTML=h;
@@ -1603,8 +1764,8 @@ function exportCSV(type){
     });
     filename='submara_portefolje.csv';
   } else if(type==='markets'){
-    csv='Land;Segment;Størrelse MNOK;Vekst;Kommentar\n';
-    D.markets.forEach(m=>{m.segments.forEach(s=>{ csv+=`${m.country};${s.name};${s.size};${s.growth}%;${s.note}\n`; });});
+    csv='Land;Segment;Størrelse MNOK;Vekst;Confidence;Relevans;Attraktivitet;Drivere\n';
+    D.markets.forEach(m=>{m.segments.forEach(s=>{ csv+=`${m.country};${s.name};${s.size};${s.growth}%;${s.conf||''};${s.submaraRelevance||''};${s.attractiveness||''};${(s.note||'').replace(/;/g,',')}\n`; });});
     filename='submara_markeder.csv';
   }
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
